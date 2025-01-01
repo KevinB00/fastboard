@@ -2,13 +2,13 @@ import { Layout, Flex, Anchor, Button } from "antd";
 import "./HeaderComponent.sass";
 
 const { Header } = Layout;
-export const HeaderComponent = () => {
+const HeaderComponent = () => {
 
   return (
       <Header className="header">
         <Flex className="flex-header" justify="space-between" align="center">
             <h1>FastBoard</h1>
-            <Flex align="center" gap={70}>
+            <Flex wrap align="center" gap={70}>
               <Anchor
                 direction="horizontal"
                 items={[
@@ -38,3 +38,4 @@ export const HeaderComponent = () => {
       </Header>
   );
 };
+export default HeaderComponent

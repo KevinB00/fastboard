@@ -13,8 +13,11 @@ const config = {
         colorText: '#fff'
       },
       Anchor: {
-        colorText: '#fff',
+        colorText: '#7D7EDA',
         colorPrimary: '#7D7EDA'
+      },
+      Form: {
+        labelColor: '#fff'
       }
     }
   };
