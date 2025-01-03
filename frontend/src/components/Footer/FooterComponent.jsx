@@ -15,7 +15,7 @@ const FooterComponent = () => {
   };
 
   return (
-    <div className="footer">
+    <div className="footer" id="contacto">
       <Flex
         className="flex-footer"
         justify="space-around"
