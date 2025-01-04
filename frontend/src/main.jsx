@@ -6,6 +6,7 @@ import config from "./styles/globalStyles";
 import "./index.sass";
 import Inicio from "./pages/Landing/Inicio.jsx";
 import InicioSesion from "./pages/Signin/InicioSesion.jsx";
+import Register from "./pages/register/Register.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -16,6 +17,7 @@ createRoot(document.getElementById("root")).render(
           <Route path="inicio" element={<Inicio />} />
           <Route path="inicio-sesion" element={<InicioSesion />} />
           <Route path="*" element={<Inicio />} />
+          <Route path="register" element={<Register />} />
         </Routes>
       </BrowserRouter>
     </ConfigProvider>

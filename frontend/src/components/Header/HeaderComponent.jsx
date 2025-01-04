@@ -33,7 +33,9 @@ const HeaderComponent = () => {
             <Link to="/inicio-sesion">
               <Button type="primary">Iniciar sesión</Button>
             </Link>
-            <Button type="dashed">Registrarse</Button>
+            <Link to="/register">
+              <Button type="dashed">Registrarse</Button>
+            </Link>
           </Flex>
         </Flex>
       </Flex>
