@@ -1,5 +1,5 @@
 import "./InicioSesion.sass";
-import iniciosesion from "../../styles/signin";
+import iniciosesion from "../../styles/forms";
 import { GoogleOutlined } from "@ant-design/icons";
 import { Flex, Form, Input, Checkbox, Button, ConfigProvider } from "antd";
 const InicioSesion = () => {
@@ -33,33 +33,37 @@ const InicioSesion = () => {
               onFinishFailed={iniciarSesionError}
               autoComplete="off"
             >
-              <Form.Item
-                label="Correo"
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    message: "Por favor ingrese su email",
-                  },
-                ]}
-              >
-                <Input placeholder="example@email.com" />
-              </Form.Item>
-              <Form.Item
-                label="Contraseña"
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: "Por favor ingrese su contraseña",
-                  },
-                ]}
-              >
-                <Input.Password />
-              </Form.Item>
-              <Form.Item name="remember" valuePropName="checked" label={null}>
-                <Checkbox>Recuerdame</Checkbox>
-              </Form.Item>
+              <Flex vertical wrap>
+                <Form.Item
+                  label="Correo"
+                  name="email"
+                  rules={[
+                    {
+                      type: "email",
+                      required: true,
+                      message: "Por favor ingrese su email",
+                    },
+                  ]}
+                >
+                  <Input placeholder="example@email.com" />
+                </Form.Item>
+                <Form.Item
+                  label="Contraseña"
+                  name="password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Por favor ingrese su contraseña",
+                    },
+                  ]}
+                >
+                  <Input.Password />
+                </Form.Item>
+                <Form.Item name="remember" valuePropName="checked" label={null}>
+                  <Checkbox>Recuerdame</Checkbox>
+                </Form.Item>
+              </Flex>
+
               <Form.Item>
                 <Button size="large" type="primary" htmlType="submit">
                   Iniciar sesión
