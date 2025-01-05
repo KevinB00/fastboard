@@ -1,6 +1,7 @@
 import "./InicioSesion.sass";
 import iniciosesion from "../../styles/signin";
 import { GoogleOutlined } from "@ant-design/icons";
+import { Link } from "react-router";
 import { Flex, Form, Input, Checkbox, Button, ConfigProvider } from "antd";
 const InicioSesion = () => {
   const iniciarSesion = () => {};
@@ -61,9 +62,11 @@ const InicioSesion = () => {
                 <Checkbox>Recuerdame</Checkbox>
               </Form.Item>
               <Form.Item>
-                <Button size="large" type="primary" htmlType="submit">
-                  Iniciar sesión
-                </Button>
+                <Link to="/landing-user">
+                  <Button size="large" type="primary" htmlType="submit">
+                    Iniciar sesión
+                  </Button>
+                </Link>
               </Form.Item>
             </Form>
             <div className="separador">
