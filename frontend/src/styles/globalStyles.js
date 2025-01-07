@@ -10,6 +10,8 @@ const config = {
     components: {
       Layout: {
         headerBg: 'rgba(112,158,201,0.59)',
+        siderBg: 'rgba(112,158,201,0.59)',
+        contentBg: '#fff', 
         colorText: '#fff'
       },
       Anchor: {
