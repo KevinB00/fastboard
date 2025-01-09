@@ -4,7 +4,10 @@ import { GoogleOutlined } from "@ant-design/icons";
 import { Link } from "react-router";
 import { Flex, Form, Input, Checkbox, Button, ConfigProvider } from "antd";
 const InicioSesion = () => {
-  const iniciarSesion = () => {};
+  const iniciarSesion = (values) => {
+    console.log( "Success:", values);
+
+  };
   const iniciarSesionError = () => {};
   return (
     <ConfigProvider theme={iniciosesion}>

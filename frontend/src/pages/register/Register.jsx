@@ -2,8 +2,11 @@ import "./Register.sass";
 import register from "../../styles/forms";
 import { Flex, Form, Input, ConfigProvider, Button } from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
+import registrar from "../../services/create/user";
 const Register = () => {
-  const registrarse = () => {};
+  const registrarse = (values) => {
+    registrar(values);
+  };
 
   const registroError = () => {};
   return (
@@ -82,6 +85,10 @@ const Register = () => {
                     {
                       required: true,
                       message: "Por favor ingresa tu contraseña!",
+                    },
+                    {
+                      min: 6,
+                      message: "La contraseña debe tener al menos 6 caracteres",
                     },
                   ]}
                 >
