@@ -1,13 +1,27 @@
 import "./Register.sass";
 import register from "../../styles/forms";
-import { Flex, Form, Input, ConfigProvider, Button } from "antd";
+import { Flex, Form, Input, ConfigProvider, Button, Alert } from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
 import registrar from "../../services/create/user";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 const Register = () => {
+  const [error, setError] = useState(false);
+  const navigate = useNavigate(); //Control de navegación
+  
   const registrarse = (values) => {
-    registrar(values);
-  };
-
+    registrar(values, "registrar")
+      .then((response) => {
+        if (response === "success") {
+          navigate("/landing-user"); // Si se registro correctamente, se redirige a la pantalla de inicio de usuario
+        } else {
+          setError(true);
+        }
+    }).catch((error) => {
+      console.log(error);
+      setError(true);
+    });
+    }
   const registroError = () => {};
   return (
     <ConfigProvider theme={register}>
@@ -18,7 +32,7 @@ const Register = () => {
           align="center"
           wrap
         >
-          <h1>FastBoard</h1>
+          <h1>FastBoard</h1>         
         </Flex>
         <div className="content-register">
           <Flex
@@ -28,6 +42,7 @@ const Register = () => {
             vertical
             wrap
           >
+            <Alert style={{ display: error ? "block" : "none" }} message="Error al registrar usuario" type="warning" />
             <h1>Registrarse</h1>
             <Form
               className="form-register"
@@ -135,17 +150,17 @@ const Register = () => {
               </Flex>
             </Form>
             <div className="separador">
-                <span>o</span>
+              <span>o</span>
             </div>
             <div className="google">
-                <Button
-                    className="button-google"
-                    block
-                    type="primary"
-                    icon={<GoogleOutlined />}
-                >
-                    Registrarse con Google
-                </Button>
+              <Button
+                className="button-google"
+                block
+                type="primary"
+                icon={<GoogleOutlined />}
+              >
+                Registrarse con Google
+              </Button>
             </div>
             <Flex justify="center" align="center" wrap>
               <p>

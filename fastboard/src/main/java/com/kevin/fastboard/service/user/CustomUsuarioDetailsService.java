@@ -21,11 +21,11 @@ public class CustomUsuarioDetailsService implements UserDetailsService {
         if (usuario == null) {
             throw new UsernameNotFoundException("No se encontro el usuario con el email: " + email);
         }
-        return org.springframework.security.core.userdetails.User
-                .withUsername(usuario.getNombre())
-                .password(usuario.getContrasenya())
-                .roles("USER")
-                .build();
+        return new org.springframework.security.core.userdetails.User(
+                usuario.getEmail(),
+                usuario.getContrasenya(),
+                java.util.Collections.emptyList());
+                
     }
 
     

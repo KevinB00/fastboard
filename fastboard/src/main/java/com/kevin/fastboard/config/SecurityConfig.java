@@ -10,11 +10,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.kevin.fastboard.service.user.CustomUsuarioDetailsService;
+
 import static org.springframework.security.config.Customizer.withDefaults;
+
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final CustomUsuarioDetailsService customUsuarioDetailsService;
+
+    public SecurityConfig(CustomUsuarioDetailsService customUsuarioDetailsService) {
+        this.customUsuarioDetailsService = customUsuarioDetailsService;
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

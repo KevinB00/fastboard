@@ -1,11 +1,26 @@
 import "./InicioSesion.sass";
 import iniciosesion from "../../styles/forms";
 import { GoogleOutlined } from "@ant-design/icons";
-import { Link } from "react-router";
-import { Flex, Form, Input, Checkbox, Button, ConfigProvider } from "antd";
+import { Flex, Form, Input, Checkbox, Button, ConfigProvider, Alert } from "antd";
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import usuario from "../../services/create/user";
 const InicioSesion = () => {
+  const [error, setError] = useState(false);
+  const navigate = useNavigate();
   const iniciarSesion = (values) => {
-    console.log( "Success:", values);
+    usuario(values, "login")
+      .then((response) => {
+        if (response === "success") {
+          navigate("/landing-user"); // Si se registro correctamente, se redirige a la pantalla de inicio de usuario
+        } else {
+          setError(true);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(true);
+      })
 
   };
   const iniciarSesionError = () => {};
@@ -27,6 +42,7 @@ const InicioSesion = () => {
             vertical
             wrap
           >
+            <Alert style={{ display: error ? "block" : "none"}} type="warning" message="Error de inicio de sesión, por favor revisa tus credenciales" />
             <h1>Inicio de sesión</h1>
             <Form
               className="form-inicio-sesion"
@@ -69,11 +85,9 @@ const InicioSesion = () => {
               </Flex>
 
               <Form.Item>
-                <Link to="/landing-user">
                   <Button size="large" type="primary" htmlType="submit">
                     Iniciar sesión
                   </Button>
-                </Link>
               </Form.Item>
             </Form>
             <div className="separador">
