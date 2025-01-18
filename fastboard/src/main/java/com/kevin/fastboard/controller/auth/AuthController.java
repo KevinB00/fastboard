@@ -19,14 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/auth")
-@PreAuthorize("denyAll()")
 public class AuthController {
 
     @Autowired
     private IUsuarioService userService;
 
     @PostMapping("/registrar")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<String> registrar(@RequestBody String nuevoUsuario) throws Exception {
         String decodeJson = URLDecoder.decode(nuevoUsuario, "UTF-8");
         UsuarioEntity userRegistrado = userService.registrar(decodeJson);
@@ -39,7 +37,6 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<String> login(@RequestBody String entity) throws Exception {
         String decodeJson = URLDecoder.decode(entity, "UTF-8");
         UsuarioEntity loginUsuario = userService.login(decodeJson);

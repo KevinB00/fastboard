@@ -15,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.kevin.fastboard.service.user.UserDetailServiceImpl;
 
@@ -27,15 +28,18 @@ public class SecurityConfig {
     /*
      * SecurityFilterChain -> Configuración de la seguridad de la aplicación
      * @param http -> Peticion HTTP desde el frontend
-     * httpBasic -> Autenticación de los filtros de la aplicación
+     *
      * sessionManagement -> Configuración de la gestión de sesiones
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         return http
             .csrf(csrf -> csrf.disable())
-            .httpBasic(Customizer.withDefaults())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**").permitAll()
+                .anyRequest().authenticated())   
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
     }
 
