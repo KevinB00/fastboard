@@ -53,7 +53,7 @@ public class UsuarioEntity {
     @Column(name = "account_No_Locked")
     private boolean accountNoLocked;
 
-    @Column(name = "credentials_No_Expired")
+    @Column(name = "credential_No_Expired")
     private boolean credentialsNoExpired;
   
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

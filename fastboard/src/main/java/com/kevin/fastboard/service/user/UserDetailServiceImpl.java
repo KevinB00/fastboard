@@ -19,12 +19,26 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UsuarioEntity user = usuarioRepository.findByEmail(email);
         if (user != null) {
             List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
-    }
-            return null;
+            user.getRoles()
+            .forEach(role -> authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getRoleEnum().name()))));
+            user.getRoles().stream()
+                    .flatMap(role -> role.getPermissions().stream())
+                    .forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission.getName())));
+                    return new User(user.getEmail(),
+                            user.getContrasenya(),
+                            user.isEnabled(),
+                            user.isAccountNoExpired(),
+                            user.isCredentialsNoExpired(),
+                            user.isAccountNoLocked(),
+                            authorityList);
+        }else{
+            throw new UsernameNotFoundException("No se encontro el usuario con el email: " + email);
+        }
     }
 }
