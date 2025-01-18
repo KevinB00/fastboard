@@ -8,6 +8,7 @@ import Inicio from "./pages/Landing/Inicio.jsx";
 import InicioSesion from "./pages/Signin/InicioSesion.jsx";
 import Register from "./pages/register/Register.jsx";
 import LandingUser from "./pages/LandingUser/LandingUser.jsx";
+import ProtectedRoute from "./components/Protected/ProtectedRoute.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -19,7 +20,14 @@ createRoot(document.getElementById("root")).render(
           <Route path="inicio-sesion" element={<InicioSesion />} />
           <Route path="*" element={<Inicio />} />
           <Route path="register" element={<Register />} />
-          <Route path="landing-user" element={<LandingUser />} />
+          <Route
+            path="landing-user"
+            element={
+              <ProtectedRoute>
+                <LandingUser />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </ConfigProvider>
