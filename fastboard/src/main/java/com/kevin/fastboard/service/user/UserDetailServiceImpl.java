@@ -1,6 +1,11 @@
 package com.kevin.fastboard.service.user;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,24 +15,16 @@ import com.kevin.fastboard.entity.UsuarioEntity;
 import com.kevin.fastboard.repository.UsuarioRepository;
 
 @Service
-public class CustomUsuarioDetailsService implements UserDetailsService {
+public class UserDetailServiceImpl implements UserDetailsService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UsuarioEntity usuario = usuarioRepository.findByEmail(email);
-        if (usuario == null) {
-            throw new UsernameNotFoundException("No se encontro el usuario con el email: " + email);
-        }
-        return new org.springframework.security.core.userdetails.User(
-                usuario.getEmail(),
-                usuario.getContrasenya(),
-                java.util.Collections.emptyList());
-                
+        UsuarioEntity user = usuarioRepository.findByEmail(email);
+        if (user != null) {
+            List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
     }
-
-    
-
+            return null;
+    }
 }

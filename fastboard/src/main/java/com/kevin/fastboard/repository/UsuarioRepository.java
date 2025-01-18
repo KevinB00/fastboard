@@ -3,11 +3,11 @@ package com.kevin.fastboard.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.kevin.fastboard.entities.Usuario;
+import com.kevin.fastboard.entity.UsuarioEntity;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
-    public Usuario save(Usuario user);
+public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer> {
+    public UsuarioEntity save(UsuarioEntity user);
 
-    public Usuario findByEmail(String email);
+    public UsuarioEntity findByEmail(String email);
 }

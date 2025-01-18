@@ -1,8 +1,8 @@
 package com.kevin.fastboard.service.user;
 
-import com.kevin.fastboard.entities.Usuario;
+import com.kevin.fastboard.entity.UsuarioEntity;
 
 public interface IUsuarioService {
-   Usuario registrar(String nuevoUsuario);
-    Usuario login(String login);
+   UsuarioEntity registrar(String nuevoUsuario);
+    UsuarioEntity login(String login);
 }

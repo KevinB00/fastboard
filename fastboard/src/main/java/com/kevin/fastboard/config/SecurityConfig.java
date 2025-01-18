@@ -3,59 +3,58 @@ package com.kevin.fastboard.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.kevin.fastboard.service.user.CustomUsuarioDetailsService;
-
-import static org.springframework.security.config.Customizer.withDefaults;
-
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
-    private final CustomUsuarioDetailsService customUsuarioDetailsService;
-
-    public SecurityConfig(CustomUsuarioDetailsService customUsuarioDetailsService) {
-        this.customUsuarioDetailsService = customUsuarioDetailsService;
-    }
+    /*
+     * SecurityFilterChain -> Configuración de la seguridad de la aplicación
+     * @param http -> Peticion HTTP desde el frontend
+     * httpBasic -> Autenticación de los filtros de la aplicación
+     * sessionManagement -> Configuración de la gestión de sesiones
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**")
-                        .ignoringRequestMatchers("/landing-user"))
-                .authorizeRequests(requests -> {
-                    try {
-                        requests
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/landing-user").authenticated()
-                                .anyRequest().permitAll()
-                                .and()
-                                .formLogin(form -> form.disable())
-                                .httpBasic(withDefaults());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-        return http.build();
+        return http
+            .csrf(csrf -> csrf.disable())
+            .httpBasic(Customizer.withDefaults())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .build();
+    }
+
+
+    /*
+     * Se encarga de manejar la autenticación mandando a encriptar la contraseña y obtener la autenticación de usuarios
+     */
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        authenticationProvider.setUserDetailsService(null);
+        return authenticationProvider;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .build();
-    }
-
 }
