@@ -12,8 +12,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kevin.fastboard.controller.auth.dto.JwtResponse;
 import com.kevin.fastboard.entity.UsuarioEntity;
 import com.kevin.fastboard.service.user.IUsuarioService;
+
+import utils.JwtUtils;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -24,6 +28,9 @@ public class AuthController {
     @Autowired
     private IUsuarioService userService;
 
+    @Autowired
+    private JwtUtils jwtUtil;
+
     @PostMapping("/registrar")
     public ResponseEntity<String> registrar(@RequestBody String nuevoUsuario) throws Exception {
         String decodeJson = URLDecoder.decode(nuevoUsuario, "UTF-8");
@@ -32,20 +39,30 @@ public class AuthController {
             return ResponseEntity.badRequest().build();
             
         }else{
-            return ResponseEntity.ok("success");
+            return ResponseEntity.ok().build();
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody String entity) throws Exception {
+    public ResponseEntity<JwtResponse> login(@RequestBody String entity) throws Exception {
         String decodeJson = URLDecoder.decode(entity, "UTF-8");
         UsuarioEntity loginUsuario = userService.login(decodeJson);
         if (loginUsuario.getId() == null) {
             return ResponseEntity.badRequest().build();
         }else{
             Authentication authentication = new UsernamePasswordAuthenticationToken(loginUsuario.getEmail(), loginUsuario.getContrasenya());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            return ResponseEntity.ok("success");
+            String token = jwtUtil.generateToken(authentication.getName());
+            
+            JwtResponse jwtResponse = new JwtResponse(
+                token,
+                loginUsuario.getNombre(),
+                loginUsuario.getRoles().stream()
+                    .findFirst()
+                    .map(role -> role.getRoleEnum().name())
+                    .orElse("USER")
+            );
+
+            return ResponseEntity.ok(jwtResponse);
         }
 
     }
