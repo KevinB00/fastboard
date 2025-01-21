@@ -32,17 +32,27 @@ public class JwtTokenValidator extends OncePerRequestFilter {
 
     /*
      * Validar el token JWT y autenticar al usuario utililzando la clase JwtUtil
+     * 
      * @param request Peticion HTTP desde el frontend
+     * 
      * @param response Respuesta HTTP hacia el frontend
+     * 
      * @param filterChain Peticion HTTP hacia el backend
      */
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
-        final String authorizationHeader = request.getHeader("Authorization");
+        System.out.println("Processing request: " + request.getRequestURI());
 
+        final String authorizationHeader = request.getHeader("Authorization");
         String username = null;
         String jwt = null;
+
+        // Excluir rutas públicas
+        if (request.getRequestURI().startsWith("/auth/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
@@ -55,8 +65,9 @@ public class JwtTokenValidator extends OncePerRequestFilter {
                         username, null, userDetailsService.loadUserByUsername(username).getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
-            filterChain.doFilter(request, response);
         }
+
+        filterChain.doFilter(request, response);
     }
 
 }

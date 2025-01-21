@@ -74,16 +74,14 @@ public class UserService implements IUsuarioService {
     }
 
     @Override
-    public UsuarioEntity login(String login) {
+    public UsuarioEntity login(String email, String contrasenya) {
         UsuarioEntity user = new UsuarioEntity();
         try {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree(login);
-        UsuarioEntity userEmail = usuarioRepository.findByEmail(node.get("email").asText());
+        UsuarioEntity userEmail = usuarioRepository.findByEmail(email);
         if (userEmail != null) {
             String password = userEmail.getContrasenya();
-            if (new BCryptPasswordEncoder().matches(node.get("password").asText(), password)) {
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(node.get("email").asText(), node.get("password").asText());
+            if (new BCryptPasswordEncoder().matches(contrasenya, password)) {
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, contrasenya);
                 authenticationManager.authenticate(authenticationToken);
                 return userEmail;
             }

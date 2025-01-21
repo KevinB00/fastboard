@@ -13,16 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kevin.fastboard.controller.auth.dto.JwtResponse;
+import com.kevin.fastboard.controller.auth.dto.LoginRequest;
 import com.kevin.fastboard.entity.UsuarioEntity;
 import com.kevin.fastboard.service.user.IUsuarioService;
 
 import utils.JwtUtils;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthController {
 
     @Autowired
@@ -44,9 +47,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody String entity) throws Exception {
-        String decodeJson = URLDecoder.decode(entity, "UTF-8");
-        UsuarioEntity loginUsuario = userService.login(decodeJson);
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest loginRequest) throws Exception {
+        System.out.println("Request received at /login: " + loginRequest);
+        UsuarioEntity loginUsuario = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
         if (loginUsuario.getId() == null) {
             return ResponseEntity.badRequest().build();
         }else{
