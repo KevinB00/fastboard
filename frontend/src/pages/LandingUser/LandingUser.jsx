@@ -11,6 +11,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 const { Sider, Header, Content } = Layout;
+import  CardProject  from "../../components/CardProject/CardProject";
 import "./LandingUser.sass";
 const LandingUser = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -85,10 +86,11 @@ const LandingUser = () => {
               padding: 24,
               margin: 0,
               minHeight: 280,
-              borderRadius: 10
+              borderRadius: 10,
+              color: "#000"
             }
           }>
-            <h1>Proyectos</h1>
+            <CardProject />
           </Content>
         </Layout>
       </Layout>
