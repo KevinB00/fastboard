@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kevin.fastboard.controller.auth.dto.RegisterRequest;
 import com.kevin.fastboard.entity.PermissionEntity;
 import com.kevin.fastboard.entity.RoleEntity;
 import com.kevin.fastboard.entity.RoleEnum;
@@ -38,11 +39,11 @@ public class UserService implements IUsuarioService {
 
     /*
      * Metodo para registrar un nuevo usuario
-     * @param nuevoUsuario -> String que contiene la informacion del nuevo usuario en JSON
+     * @param nuevoUsuario -> String que contiene la informacion del nuevo usuario
      * @return -> UsuarioEntity que contiene la informacion del nuevo usuario, si no se pudo registrar devuelve el usaurio vacío
      */
     @Override
-    public UsuarioEntity registrar(String nuevoUsuario) {
+    public UsuarioEntity registrar(RegisterRequest nuevoUsuario) {
         UsuarioEntity user = new UsuarioEntity();
         UsuarioEntity savedUser = new UsuarioEntity();
         // PermissionEntity creaPermissionEntity = new PermissionEntity();
@@ -54,12 +55,10 @@ public class UserService implements IUsuarioService {
         // role.setPermissions(Set.of(creaPermissionEntity));
         try {
         RoleEntity role = roleRepository.findById(2).get();
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree(nuevoUsuario);
-        user.setNombre(node.get("name").asText());
-        user.setApellido(node.get("lastName").asText());
-        user.setEmail(node.get("email").asText());
-        user.setContrasenya(passwordEncoder.encode(node.get("password").asText()));
+        user.setNombre(nuevoUsuario.getName());
+        user.setApellido(nuevoUsuario.getLastName());
+        user.setEmail(nuevoUsuario.getEmail());
+        user.setContrasenya(passwordEncoder.encode(nuevoUsuario.getPassword()));
         user.setEnabled(true);
         user.setAccountNoExpired(true);
         user.setAccountNoLocked(true);

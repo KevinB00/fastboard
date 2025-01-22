@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kevin.fastboard.controller.auth.dto.JwtResponse;
 import com.kevin.fastboard.controller.auth.dto.LoginRequest;
+import com.kevin.fastboard.controller.auth.dto.RegisterRequest;
 import com.kevin.fastboard.entity.UsuarioEntity;
 import com.kevin.fastboard.service.user.IUsuarioService;
 
@@ -35,14 +36,25 @@ public class AuthController {
     private JwtUtils jwtUtil;
 
     @PostMapping("/registrar")
-    public ResponseEntity<String> registrar(@RequestBody String nuevoUsuario) throws Exception {
-        String decodeJson = URLDecoder.decode(nuevoUsuario, "UTF-8");
-        UsuarioEntity userRegistrado = userService.registrar(decodeJson);
+    public ResponseEntity<JwtResponse> registrar(@RequestBody RegisterRequest registerRequest) throws Exception {
+        UsuarioEntity userRegistrado = userService.registrar(registerRequest);
         if (userRegistrado.getId() == null) {
             return ResponseEntity.badRequest().build();
             
         }else{
-            return ResponseEntity.ok().build();
+            Authentication authentication = new UsernamePasswordAuthenticationToken(userRegistrado.getEmail(), userRegistrado.getContrasenya());
+            String token = jwtUtil.generateToken(authentication.getName());
+
+            JwtResponse jwtResponse = new JwtResponse(
+                token,
+                userRegistrado.getNombre(),
+                userRegistrado.getRoles().stream()
+                    .findFirst()
+                    .map(role -> role.getRoleEnum().name())
+                    .orElse("USER")
+            );
+
+            return ResponseEntity.ok(jwtResponse);
         }
     }
 
