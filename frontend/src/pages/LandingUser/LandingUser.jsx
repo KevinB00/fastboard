@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Layout, Menu, Button, Flex, Avatar } from "antd";
 import {
   HomeOutlined,
@@ -13,8 +13,28 @@ import {
 const { Sider, Header, Content } = Layout;
 import  CardProject  from "../../components/CardProject/CardProject";
 import "./LandingUser.sass";
+import axios from "axios";
 const LandingUser = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try{
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`/api/projects`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setProjects(response.data);
+      }catch(error){
+        console.log(error);
+      }
+    };
+    fetchProjects();
+        }, []);
+      
   return (
       <Layout className="layout-user">
         <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -90,7 +110,21 @@ const LandingUser = () => {
               color: "#000"
             }
           }>
-            <CardProject />
+            <div className="project-list">
+              {projects.length > 0 ? (
+                projects.map((project) => (
+                  <CardProject
+                    key={project.id}
+                    id={project.id}
+                    title={project.title}
+                    description={project.description}
+                    creador={project.creador}
+                  />
+                ))
+              ) : (
+                <p>No hay proyectos creados</p>
+              )}
+            </div>
           </Content>
         </Layout>
       </Layout>

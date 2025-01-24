@@ -1,14 +1,23 @@
 import "./CardProject.sass"
 import { Card } from "antd";
-export const CardProject = () => {
+import { useNavigate } from "react-router";
+import PropTypes from "prop-types";
+export const CardProject = ({ id, title, description, creador }) => {
+  CardProject.propTypes = {
+    id: PropTypes.number,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    creador: PropTypes.string
+  }
+  const navigate = useNavigate();
   return (
-    <Card className="card-projects">
+    <Card onClick={() => navigate(`/project/${id}`)} className="card-projects">
       <Card.Meta
-        title="Card title"
-        description="This is the description"
+        title={title}
+        description={description}
       >
       </Card.Meta>
-      <autor>Autor</autor>
+      <p className="creador">Creador: {creador}</p>
     </Card>
   )
 }
