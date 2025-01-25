@@ -47,7 +47,7 @@ public class AuthController {
 
             JwtResponse jwtResponse = new JwtResponse(
                 token,
-                userRegistrado.getNombre(),
+                userRegistrado.getEmail(),
                 userRegistrado.getRoles().stream()
                     .findFirst()
                     .map(role -> role.getRoleEnum().name())
@@ -70,7 +70,7 @@ public class AuthController {
             
             JwtResponse jwtResponse = new JwtResponse(
                 token,
-                loginUsuario.getNombre(),
+                loginUsuario.getEmail(),
                 loginUsuario.getRoles().stream()
                     .findFirst()
                     .map(role -> role.getRoleEnum().name())

@@ -22,7 +22,7 @@ const LandingUser = () => {
     const fetchProjects = async () => {
       try{
         const token = localStorage.getItem("token");
-        const response = await axios.get(`/api/projects`, {
+        const response = await axios.get(`/api/projects/user`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

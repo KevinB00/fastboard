@@ -43,6 +43,9 @@ public class SecurityConfig {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Autowired
+    private UserDetailServiceImpl userDetailsService;
+
     /*
      * SecurityFilterChain -> Configuración de la seguridad de la aplicación
      * 
@@ -60,7 +63,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(new JwtTokenValidator(jwtUtils), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenValidator(jwtUtils, userDetailsService), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
