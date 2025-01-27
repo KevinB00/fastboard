@@ -39,8 +39,11 @@ public class UserService implements IUsuarioService {
 
     /*
      * Metodo para registrar un nuevo usuario
+     * 
      * @param nuevoUsuario -> String que contiene la informacion del nuevo usuario
-     * @return -> UsuarioEntity que contiene la informacion del nuevo usuario, si no se pudo registrar devuelve el usaurio vacío
+     * 
+     * @return -> UsuarioEntity que contiene la informacion del nuevo usuario, si no
+     * se pudo registrar devuelve el usaurio vacío
      */
     @Override
     public UsuarioEntity registrar(RegisterRequest nuevoUsuario) {
@@ -54,18 +57,18 @@ public class UserService implements IUsuarioService {
         // role.setRoleEnum(RoleEnum.USER);
         // role.setPermissions(Set.of(creaPermissionEntity));
         try {
-        RoleEntity role = roleRepository.findById(2).get();
-        user.setNombre(nuevoUsuario.getName());
-        user.setApellido(nuevoUsuario.getLastName());
-        user.setEmail(nuevoUsuario.getEmail());
-        user.setContrasenya(passwordEncoder.encode(nuevoUsuario.getPassword()));
-        user.setEnabled(true);
-        user.setAccountNoExpired(true);
-        user.setAccountNoLocked(true);
-        user.setCredentialsNoExpired(true);
-        user.setRoles(Set.of(role));
-        
-        savedUser = usuarioRepository.save(user);
+            RoleEntity role = roleRepository.findById(2).get();
+            user.setNombre(nuevoUsuario.getName());
+            user.setApellido(nuevoUsuario.getLastName());
+            user.setEmail(nuevoUsuario.getEmail());
+            user.setContrasenya(passwordEncoder.encode(nuevoUsuario.getPassword()));
+            user.setEnabled(true);
+            user.setAccountNoExpired(true);
+            user.setAccountNoLocked(true);
+            user.setCredentialsNoExpired(true);
+            user.setRoles(Set.of(role));
+
+            savedUser = usuarioRepository.save(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,23 +79,33 @@ public class UserService implements IUsuarioService {
     public UsuarioEntity login(String email, String contrasenya) {
         UsuarioEntity user = new UsuarioEntity();
         try {
-        UsuarioEntity userEmail = usuarioRepository.findByEmail(email);
-        if (userEmail != null) {
-            String password = userEmail.getContrasenya();
-            if (new BCryptPasswordEncoder().matches(contrasenya, password)) {
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, contrasenya);
-                authenticationManager.authenticate(authenticationToken);
-                return userEmail;
+            UsuarioEntity userEmail = usuarioRepository.findByEmail(email);
+            if (userEmail != null) {
+                String password = userEmail.getContrasenya();
+                if (new BCryptPasswordEncoder().matches(contrasenya, password)) {
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                            email, contrasenya);
+                    authenticationManager.authenticate(authenticationToken);
+                    return userEmail;
+                }
+            } else {
+                return user;
             }
-        } else {
-            return user;
-        }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return user;
     }
-                
-            }
-            
 
+    @Override
+    public String getNombreUsuarioById(Integer usuarioId) {
+        Optional<UsuarioEntity> user = usuarioRepository.findById(usuarioId);
+        if (user.isPresent()) {
+            return user.get().getNombre();
+        } else {
+            return null;
+        }
+
+    }
+
+}

@@ -1,6 +1,7 @@
 package com.kevin.fastboard.entity;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,8 +38,8 @@ public class ProjectEntity {
     private Integer usuariocreador;
 
     @Column
-    private Date fecha_inicio;
+    private LocalDate fecha_inicio;
 
     @Column
-    private Date fecha_fin;
+    private LocalDate fecha_fin;
 }
