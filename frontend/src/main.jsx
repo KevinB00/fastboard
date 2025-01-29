@@ -29,7 +29,14 @@ createRoot(document.getElementById("root")).render(
               </ProtectedRoute>
             }
           />
-          <Route path="project/:id" element={<ProjectBoard />} />
+          <Route
+            path="project/:id"
+            element={
+              <ProtectedRoute>
+                <ProjectBoard/>
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </ConfigProvider>

@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kevin.fastboard.entity.ListasEntity;
 import com.kevin.fastboard.entity.ProjectEntity;
 import com.kevin.fastboard.entity.UsuarioEntity;
+import com.kevin.fastboard.repository.ListasRepository;
 import com.kevin.fastboard.repository.ProjectRepository;
 import com.kevin.fastboard.repository.UsuarioRepository;
 
@@ -18,6 +20,9 @@ public class ProjectService implements IProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private ListasRepository listasRepository;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -44,6 +49,25 @@ public class ProjectService implements IProjectService {
         project.setFecha_fin(fechaFin);
         return projectRepository.save(project);
         }catch(Exception e){
+            return null;
+        }
+    }
+
+    @Override
+    public ProjectEntity getProjectById(Integer id) {
+        return projectRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public ListasEntity createLista(String nombre, Integer idProyecto) {
+
+        try{
+        ListasEntity lista = new ListasEntity();
+        lista.setNombre(nombre);
+        lista.setProyectoid(idProyecto);
+        return listasRepository.save(lista);
+        }catch(Exception e){
+            System.out.println(e);
             return null;
         }
     }
