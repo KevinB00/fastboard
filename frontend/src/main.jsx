@@ -9,6 +9,7 @@ import InicioSesion from "./pages/Signin/InicioSesion.jsx";
 import Register from "./pages/register/Register.jsx";
 import LandingUser from "./pages/LandingUser/LandingUser.jsx";
 import ProtectedRoute from "./components/Protected/ProtectedRoute.jsx";
+import ProjectBoard from "./pages/ProjectBoard/ProjectBoard.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -28,6 +29,7 @@ createRoot(document.getElementById("root")).render(
               </ProtectedRoute>
             }
           />
+          <Route path="project/:id" element={<ProjectBoard />} />
         </Routes>
       </BrowserRouter>
     </ConfigProvider>
