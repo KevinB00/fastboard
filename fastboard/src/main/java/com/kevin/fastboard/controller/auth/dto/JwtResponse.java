@@ -2,12 +2,12 @@ package com.kevin.fastboard.controller.auth.dto;
 
 public class JwtResponse {
     private String token;
-    private String username;
+    private String email;
     private String role;
 
-    public JwtResponse(String token, String username, String role) {
+    public JwtResponse(String token, String email, String role) {
         this.token = token;
-        this.username = username;   
+        this.email = email;   
         this.role = role;
     }
 
@@ -19,12 +19,12 @@ public class JwtResponse {
         this.token = token;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getRole() {

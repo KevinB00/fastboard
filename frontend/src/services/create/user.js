@@ -23,7 +23,7 @@ const usuario = async (data, type) => {
     );
     localStorage.setItem("token", response.data.token);
     localStorage.setItem("role", response.data.role);
-    localStorage.setItem("username", response.data.username);
+    localStorage.setItem("email", response.data.email);
     return response.status === 200 ? "success" : "error";
   } catch (error) {
     console.error("Error en la solicitud:", error);

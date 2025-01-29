@@ -22,6 +22,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        System.out.println("loadUserByUsername: " + email);
         UsuarioEntity user = usuarioRepository.findByEmail(email);
         if (user != null) {
             List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
