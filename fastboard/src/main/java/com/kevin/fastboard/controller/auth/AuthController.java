@@ -12,9 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kevin.fastboard.controller.auth.dto.JwtResponse;
-import com.kevin.fastboard.controller.auth.dto.LoginRequest;
-import com.kevin.fastboard.controller.auth.dto.RegisterRequest;
+import com.kevin.fastboard.controller.dto.JwtResponse;
+import com.kevin.fastboard.controller.dto.LoginRequest;
+import com.kevin.fastboard.controller.dto.RegisterRequest;
 import com.kevin.fastboard.entity.UsuarioEntity;
 import com.kevin.fastboard.service.user.IUsuarioService;
 

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kevin.fastboard.controller.auth.dto.RegisterRequest;
+import com.kevin.fastboard.controller.dto.RegisterRequest;
 import com.kevin.fastboard.entity.PermissionEntity;
 import com.kevin.fastboard.entity.RoleEntity;
 import com.kevin.fastboard.entity.RoleEnum;

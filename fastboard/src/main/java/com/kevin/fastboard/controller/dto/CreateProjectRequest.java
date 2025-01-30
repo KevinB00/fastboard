@@ -1,4 +1,4 @@
-package com.kevin.fastboard.controller.auth.dto;
+package com.kevin.fastboard.controller.dto;
 
 import java.time.LocalDate;
 

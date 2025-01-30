@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kevin.fastboard.controller.auth.dto.CreateProjectRequest;
-import com.kevin.fastboard.controller.auth.dto.ListaRequest;
+import com.kevin.fastboard.controller.dto.CreateProjectRequest;
+import com.kevin.fastboard.controller.dto.ListaRequest;
 import com.kevin.fastboard.entity.ListasEntity;
 import com.kevin.fastboard.entity.ProjectEntity;
 import com.kevin.fastboard.service.IProjectService;

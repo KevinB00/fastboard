@@ -13,7 +13,7 @@ import PropTypes from "prop-types";
 import "./CardLista.sass";
 import axios from "axios";
 import modalCrearProyecto from "../../styles/modalCrearProyecto";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const CardLista = ({ id, nombre }) => {
   CardLista.propTypes = {
@@ -26,18 +26,36 @@ const CardLista = ({ id, nombre }) => {
   const [inputValue, setInputValue] = useState("");
   const [form] = Form.useForm();
 
+
+  useEffect(() => {
+    const fetchTareas = async () => {
+      try {
+        const response = await axios.get(`/api/tareas/lista/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setTags(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchTareas();
+  })
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
-  const handleAddTag = () => {
-    if (inputValue.trim() !== "") {
+  const handleAddTag = async () => {
+    if (inputValue.trim() !== "" && tags.length < 5) {
       setTags([...tags, inputValue]);
       setInputValue("");
+    }else {
+      message.warning("No puedes agregar más de 5 etiquetas");
     }
   };
 
-  const handleRemoveTag = (tag) => {
+  const handleRemoveTag = async (tag) => {
     setTags(tags.filter((t) => t !== tag));
   };
 
@@ -45,13 +63,13 @@ const CardLista = ({ id, nombre }) => {
     try {
       const values = await form.validateFields();
       const response = await axios.post(
-        "/api/projects/tarea/create",
+        "/api/tareas/create",
         {
           nombre: values.tarea,
           descripcion: values.descripcion,
           fechaInicio: values.fechaInicio,
           fechaFin: values.fechaFin,
-          etiquetas: values.etiquetas,
+          etiquetas: tags,
           idLista: id,
         },
         {
@@ -68,6 +86,7 @@ const CardLista = ({ id, nombre }) => {
     } catch (error) {
       message.warning("Por favor complete todos los campos obligatorios");
       console.log(error);
+      form.resetFields();
     }
   };
 
@@ -101,6 +120,7 @@ const CardLista = ({ id, nombre }) => {
       >
         <ConfigProvider theme={modalCrearProyecto}>
           <Form
+            form={form}
             name="nueva-tarea"
             layout="vertical"
             labelCol={{ span: 8 }}
@@ -158,7 +178,7 @@ const CardLista = ({ id, nombre }) => {
               rules={[
                 {
                   required: false,
-                  max: 5,
+                  
                 },
               ]}
             >
