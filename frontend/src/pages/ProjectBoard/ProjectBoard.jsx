@@ -23,6 +23,7 @@ const ProjectBoard = () => {
   const [nombreProyecto, setNombreProyecto] = useState("");
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [listas, setListas] = useState([]);
   const { id } = useParams();
   const [form] = Form.useForm();
 
@@ -39,7 +40,21 @@ const ProjectBoard = () => {
         console.log(error);
       }
     };
+
+    const fetchListas = async () => {
+      try {
+        const response = await axios.get(`/api/projects/listas/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setListas(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchDatosProyecto();
+    fetchListas();
   }, [id]);
 
   const handCrearLista = async () => {
@@ -152,7 +167,17 @@ const ProjectBoard = () => {
             </ConfigProvider>
           </Modal>
           <Flex className="flex-listas" justify="center" align="center" wrap>
-           <CardLista />
+              {listas.length > 0 ? (
+                listas.map((lista) => (
+                  <CardLista
+                    key={lista.id}
+                    id={lista.id}
+                    nombre={lista.nombre}
+                  />
+                ))
+              ) : (
+                  <h1>Aún no hay listas en este proyecto</h1>
+              )}
           </Flex>
         </Content>
       </ConfigProvider>

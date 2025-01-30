@@ -77,4 +77,14 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/listas/{id}")
+    public ResponseEntity<List<ListasEntity>> getListas(@RequestHeader("Authorization") String token, @PathVariable Integer id) throws Exception {
+        List<ListasEntity> listas = projectService.getListas(id);
+        if (listas.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }else{
+            return ResponseEntity.ok(listas);
+        }
+    }
+
 }

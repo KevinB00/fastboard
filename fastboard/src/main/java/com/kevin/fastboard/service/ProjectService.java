@@ -72,4 +72,13 @@ public class ProjectService implements IProjectService {
         }
     }
 
+    @Override
+    public List<ListasEntity> getListas(Integer id) {
+        try{
+        return listasRepository.findByProyectoid(id);
+        }catch(Exception e){
+            return Collections.emptyList();
+        }
+    }
+
 }

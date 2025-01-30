@@ -16,4 +16,6 @@ public interface IProjectService {
 
     ListasEntity createLista(String nombre, Integer idProyecto);
 
+    List<ListasEntity> getListas(Integer id);
+
 }
