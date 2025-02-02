@@ -1,6 +1,7 @@
 package com.kevin.fastboard.service.tareas;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,15 @@ public class TareasService implements ITareasService {
             nuevaTarea.setListaid(tarea.getIdLista());
             return tareasRepository.save(nuevaTarea);
         } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<TareaEntity> getTareas(Integer id) {
+        try{
+            return tareasRepository.findByListaid(id);
+        }catch(Exception e){
             return null;
         }
     }

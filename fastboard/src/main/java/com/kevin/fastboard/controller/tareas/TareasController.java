@@ -1,7 +1,11 @@
 package com.kevin.fastboard.controller.tareas;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -33,6 +37,17 @@ public class TareasController {
             return ResponseEntity.badRequest().build();
         } else {
             return ResponseEntity.ok(nuevaTarea);
+        }
+    }
+
+    @GetMapping("/lista/{id}")
+    public ResponseEntity<List<TareaEntity>> getTareas(@RequestHeader("Authorization") String token,
+            @PathVariable Integer id) throws Exception {
+        List<TareaEntity> tareas = tareasService.getTareas(id);
+        if (tareas.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(tareas);
         }
     }
 }

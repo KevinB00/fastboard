@@ -14,6 +14,7 @@ import "./CardLista.sass";
 import axios from "axios";
 import modalCrearProyecto from "../../styles/modalCrearProyecto";
 import { useState, useEffect } from "react";
+import TareaComponent from "../Tarea/TareaComponent";
 
 const CardLista = ({ id, nombre }) => {
   CardLista.propTypes = {
@@ -21,11 +22,11 @@ const CardLista = ({ id, nombre }) => {
     nombre: PropTypes.string,
   };
 
+  const [listaTareas, setListaTareas] = useState([]);
   const [open, setOpen] = useState(false);
   const [tags, setTags] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [form] = Form.useForm();
-
 
   useEffect(() => {
     const fetchTareas = async () => {
@@ -35,13 +36,13 @@ const CardLista = ({ id, nombre }) => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        setTags(response.data);
+        setListaTareas(response.data);
       } catch (error) {
         console.log(error);
       }
     };
     fetchTareas();
-  })
+  }, [open]);
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -50,7 +51,7 @@ const CardLista = ({ id, nombre }) => {
     if (inputValue.trim() !== "" && tags.length < 5) {
       setTags([...tags, inputValue]);
       setInputValue("");
-    }else {
+    } else {
       message.warning("No puedes agregar más de 5 etiquetas");
     }
   };
@@ -83,6 +84,7 @@ const CardLista = ({ id, nombre }) => {
       message.success("Tarea creada exitosamente");
       setOpen(false);
       form.resetFields();
+      
     } catch (error) {
       message.warning("Por favor complete todos los campos obligatorios");
       console.log(error);
@@ -178,7 +180,6 @@ const CardLista = ({ id, nombre }) => {
               rules={[
                 {
                   required: false,
-                  
                 },
               ]}
             >
@@ -197,6 +198,22 @@ const CardLista = ({ id, nombre }) => {
           </Form>
         </ConfigProvider>
       </Modal>
+
+      {listaTareas.length > 0 ? (
+        listaTareas.map((tarea) => (
+          <TareaComponent 
+            key={tarea.id}
+            id={tarea.id}
+            descripcion={tarea.descripcion}
+            etiquetas={tarea.etiquetas}
+            fecha_fin={tarea.fecha_fin}
+            fecha_inicio={tarea.fecha_inicio}
+            listaid={tarea.listaid}
+            nombre={tarea.nombre} />
+        ))
+      ) : (
+        <p>No hay tareas en esta lista</p>
+      )}
     </Card>
   );
 };
