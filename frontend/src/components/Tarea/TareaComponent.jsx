@@ -9,6 +9,7 @@ import {
   ConfigProvider,
   DatePicker,
   message,
+  Tag,
 } from "antd";
 import {
   EditOutlined,
@@ -56,6 +57,12 @@ const TareaComponent = ({
           },
         });
         setSteps(response.data);
+        for (let i =0; i < response.data.length; i++) {
+          if (response.data[i].hecho === false) {
+            setCurrent(i);
+            break;
+          }
+        }
       } catch (error) {
         console.log(error);
       }
@@ -80,7 +87,8 @@ const TareaComponent = ({
           },
         }
       );
-      setSteps([...steps, response.data]);
+      // Reemplazar array steps por response.data
+      setSteps(response.data);
       newStep.resetFields();
       message.success("Paso creado exitosamente");
       setOpenStep(false);
@@ -90,22 +98,45 @@ const TareaComponent = ({
     }
   };
 
+  const eliminarPasoActual = async () => {
+    try {
+      const response = await axios.delete(`/api/pasos/delete/${steps[current].id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setSteps(response.data);
+      message.success("Paso eliminado exitosamente");
+    } catch (error) {
+      console.log(error);
+      message.warning("No se a podido eliminar el paso");
+  }
+}
+
   const estadoTarea = async (current) => {
+    setCurrent(current);
+  };
+
+  const handUpdateTarea = async () => {
     try {
       const response = await axios.put(
-        `/api/pasos/estado/${steps[current].id}`,
-        {},
+        `/api/pasos/estado/${id}`,
+        {
+          idHecho: current,
+        },
         {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-      setCurrent(current);
-      steps[current].hecho = response.data;
+      console.log(response.data);
+      message.success("Tarea actualizada exitosamente");
+      setOpen(false);
     } catch (error) {
       console.log(error);
-      message.error("Error al completar el paso");
+      message.warning("No se a podido actualizar la tarea");
     }
   };
   return (
@@ -129,7 +160,7 @@ const TareaComponent = ({
 
       <Modal
         open={open}
-        onCancel={() => setOpen(false)}
+        onCancel={handUpdateTarea}
         title={nombre}
         footer={null}
       >
@@ -137,6 +168,7 @@ const TareaComponent = ({
           className="flex-modal-tarea"
           justify="space-around"
           align="center"
+          gap="large"
           vertical
         >
           <h3>Steps</h3>
@@ -160,7 +192,22 @@ const TareaComponent = ({
             >
               <PlusCircleOutlined />
             </Button>
+            <Button color="danger" variant="outline" shape="circle" onClick={eliminarPasoActual}>
+              <DeleteOutlined />
+            </Button>
           </Flex>
+          <Flex justify="space-between" gap="large" >
+            <div className="descripcion">
+              <h3>Descripción</h3>
+              <p>{descripcion}</p>
+            </div>
+            <div className="etiquetas">
+              <h3>Etiquetas</h3>
+              {etiquetas.map((etiqueta) => (
+                <Tag>{etiqueta}</Tag>
+              ))}
+            </div>
+            </Flex>
         </Flex>
         <Modal
           open={openStep}
