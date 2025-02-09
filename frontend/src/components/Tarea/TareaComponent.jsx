@@ -10,11 +10,13 @@ import {
   DatePicker,
   message,
   Tag,
+  Divider,
 } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   PlusCircleOutlined,
+  SendOutlined,
 } from "@ant-design/icons";
 import PropTypes from "prop-types";
 import modalCrearProyecto from "../../styles/modalCrearProyecto";
@@ -22,6 +24,7 @@ import modalCrearProyecto from "../../styles/modalCrearProyecto";
 import "./TareaComponent.sass";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import TextArea from "antd/es/input/TextArea";
 
 const TareaComponent = ({
   id,
@@ -44,9 +47,12 @@ const TareaComponent = ({
 
   const [open, setOpen] = useState(false);
   const [openStep, setOpenStep] = useState(false);
+  const [openComentarios, setOpenComentarios] = useState(false);
   const [newStep] = Form.useForm();
+  const [newComentario] = Form.useForm();
   const [current, setCurrent] = useState(0);
   const [steps, setSteps] = useState([]);
+  const [comentarios, setComentarios] = useState([]);
 
   useEffect(() => {
     const fetchSteps = async () => {
@@ -57,7 +63,7 @@ const TareaComponent = ({
           },
         });
         setSteps(response.data);
-        for (let i =0; i < response.data.length; i++) {
+        for (let i = 0; i < response.data.length; i++) {
           if (response.data[i].hecho === false) {
             setCurrent(i);
             break;
@@ -67,7 +73,21 @@ const TareaComponent = ({
         console.log(error);
       }
     };
+
+    const fetchComentarios = async () => {
+      try {
+        const response = await axios.get(`/api/comentarios/tarea/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setComentarios(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchSteps();
+    fetchComentarios();
   }, []);
 
   const handNewStep = async () => {
@@ -100,18 +120,21 @@ const TareaComponent = ({
 
   const eliminarPasoActual = async () => {
     try {
-      const response = await axios.delete(`/api/pasos/delete/${steps[current].id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await axios.delete(
+        `/api/pasos/delete/${steps[current].id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       setSteps(response.data);
       message.success("Paso eliminado exitosamente");
     } catch (error) {
       console.log(error);
       message.warning("No se a podido eliminar el paso");
-  }
-}
+    }
+  };
 
   const estadoTarea = async (current) => {
     setCurrent(current);
@@ -137,6 +160,33 @@ const TareaComponent = ({
     } catch (error) {
       console.log(error);
       message.warning("No se a podido actualizar la tarea");
+      setOpen(false);
+    }
+  };
+
+  const handNewComentario = async () => {
+    try {
+      const values = await newComentario.validateFields();
+      const response = await axios.post(
+        "/api/comentarios/create",
+        {
+          comentario: values.comentario,
+          email: localStorage.getItem("email"),
+          tareaid: id,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log(response.data);
+      message.success("Comentario creado exitosamente");
+      newComentario.resetFields();
+      setOpenComentarios(false);
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -192,11 +242,16 @@ const TareaComponent = ({
             >
               <PlusCircleOutlined />
             </Button>
-            <Button color="danger" variant="outline" shape="circle" onClick={eliminarPasoActual}>
+            <Button
+              color="danger"
+              variant="outline"
+              shape="circle"
+              onClick={eliminarPasoActual}
+            >
               <DeleteOutlined />
             </Button>
           </Flex>
-          <Flex justify="space-between" gap="large" >
+          <Flex justify="space-between" gap="large">
             <div className="descripcion">
               <h3>Descripción</h3>
               <p>{descripcion}</p>
@@ -207,7 +262,26 @@ const TareaComponent = ({
                 <Tag>{etiqueta}</Tag>
               ))}
             </div>
-            </Flex>
+          </Flex>
+          <Flex className="flex-comentarios" justify="center" gap="large">
+            <h3>Comentarios</h3>
+            <Button
+              type="primary"
+              onClick={() => setOpenComentarios(true)}
+              ghost
+            >
+              <SendOutlined />
+            </Button>
+          </Flex>
+          <Flex className="flex-comentarios-tarea" justify="space-between" gap="middle" vertical>
+            {comentarios.map((comentario) => (
+              <>
+                <p>{comentario.email}</p>
+                <hr style={{opacity: 0.3}} />
+                <p>{comentario.comentario}</p>
+              </>
+            ))}
+          </Flex>
         </Flex>
         <Modal
           open={openStep}
@@ -234,6 +308,27 @@ const TareaComponent = ({
                 rules={[{ required: true }]}
               >
                 <DatePicker format={"YYYY-MM-DD"} />
+              </Form.Item>
+            </Form>
+          </ConfigProvider>
+        </Modal>
+        <Modal
+          open={openComentarios}
+          onOk={handNewComentario}
+          onCancel={() => {
+            setOpenComentarios(false);
+            newComentario.resetFields();
+          }}
+          title="Comentarios"
+        >
+          <ConfigProvider theme={modalCrearProyecto}>
+            <Form form={newComentario} layout="vertical">
+              <Form.Item
+                label="Comentario"
+                name="comentario"
+                rules={[{ required: true }]}
+              >
+                <TextArea />
               </Form.Item>
             </Form>
           </ConfigProvider>
