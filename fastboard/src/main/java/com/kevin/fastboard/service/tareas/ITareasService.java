@@ -11,4 +11,6 @@ public interface ITareasService {
 
     List<TareaEntity> getTareas(Integer id);
 
+    TareaEntity updateTarea(Integer id, Integer listaId);
+
 }

@@ -45,4 +45,15 @@ public class TareasService implements ITareasService {
         }
     }
 
+    @Override
+    public TareaEntity updateTarea(Integer id, Integer listaId) {
+        try{
+            TareaEntity tarea = tareasRepository.findById(id).get();
+            tarea.setListaid(listaId);
+            return tareasRepository.save(tarea);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

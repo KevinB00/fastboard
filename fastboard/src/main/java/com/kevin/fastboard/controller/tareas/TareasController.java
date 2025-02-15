@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,16 @@ public class TareasController {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok(tareas);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TareaEntity> updateTarea(@RequestHeader("Authorization") String token, @PathVariable Integer id, @RequestBody Integer listaId) throws Exception {
+        TareaEntity tarea = tareasService.updateTarea(id, listaId);
+        if (tarea == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(tarea);
         }
     }
 }
