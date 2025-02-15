@@ -10,7 +10,6 @@ import {
   DatePicker,
   message,
   Tag,
-  Divider,
 } from "antd";
 import {
   EditOutlined,
@@ -20,7 +19,8 @@ import {
 } from "@ant-design/icons";
 import PropTypes from "prop-types";
 import modalCrearProyecto from "../../styles/modalCrearProyecto";
-
+import { itemTypes } from "../../context/Constants/itemTypes";
+import { useDrag } from "react-dnd";
 import "./TareaComponent.sass";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -54,6 +54,13 @@ const TareaComponent = ({
   const [steps, setSteps] = useState([]);
   const [comentarios, setComentarios] = useState([]);
 
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: itemTypes.TAREA,
+    item: { id, listaid },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
   useEffect(() => {
     const fetchSteps = async () => {
       try {
@@ -190,7 +197,7 @@ const TareaComponent = ({
     }
   };
   return (
-    <List itemLayout="vertical">
+    <List ref={drag} style={{opacity: isDragging ? 0.5 : 1}} itemLayout="vertical">
       <List.Item className="tarea" key={id}>
         <List.Item.Meta
           className="meta-tarea"
@@ -273,11 +280,16 @@ const TareaComponent = ({
               <SendOutlined />
             </Button>
           </Flex>
-          <Flex className="flex-comentarios-tarea" justify="space-between" gap="middle" vertical>
+          <Flex
+            className="flex-comentarios-tarea"
+            justify="space-between"
+            gap="middle"
+            vertical
+          >
             {comentarios.map((comentario) => (
               <>
                 <p>{comentario.email}</p>
-                <hr style={{opacity: 0.3}} />
+                <hr style={{ opacity: 0.3 }} />
                 <p>{comentario.comentario}</p>
               </>
             ))}

@@ -13,6 +13,8 @@ import {
   Modal,
 } from "antd";
 import { useState, useEffect } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import axios from "axios";
 import { useParams } from "react-router";
 import boardProyecto from "../../styles/boardProyecto";
@@ -73,6 +75,16 @@ const ProjectBoard = () => {
           },
         }
       );
+      try {
+        const responseLista = await axios.get(`/api/projects/listas/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setListas(responseLista.data);
+      } catch (error) {
+        console.log(error);
+      }
       console.log(response.data);
       setConfirmLoading(true);
       setTimeout(() => {
@@ -97,76 +109,82 @@ const ProjectBoard = () => {
     form.resetFields();
   };
   return (
-    <Layout className="layout-board">
-      <Header className="header">
-        <Flex
-          className="flex-header-board"
-          justify="space-between"
-          align="center"
-          wrap
-        >
-          <LeftOutlined
-            className="return-icon"
-            size={{
-              xs: 24,
-              sm: 32,
-              md: 30,
-              lg: 34,
-              xl: 40,
-              xxl: 40,
-            }}
-          />
-          <h1>{nombreProyecto}</h1>
-          <Avatar
-            className="perfil-icon"
-            size={{
-              xs: 24,
-              sm: 32,
-              md: 30,
-              lg: 34,
-              xl: 40,
-              xxl: 40,
-            }}
-            icon={<UserOutlined />}
-          />
-        </Flex>
-      </Header>
-      <ConfigProvider theme={boardProyecto}>
-        <Content className="content-board">
-          <Flex className="flex-board" justify="flex-end" align="center">
-            <Button
-              onClick={() => setOpen(true)}
-              className="crear-lista"
-              type="primary"
-            >
-              Crear lista
-            </Button>
-          </Flex>
-          <Modal
-            title="Crear lista"
-            open={open}
-            onOk={handCrearLista}
-            confirmLoading={confirmLoading}
-            onCancel={handleCancel}
+    <DndProvider backend={HTML5Backend}>
+      <Layout className="layout-board">
+        <Header className="header">
+          <Flex
+            className="flex-header-board"
+            justify="space-between"
+            align="center"
+            wrap
           >
-            <ConfigProvider theme={modalCrearProyecto}>
-              <Form form={form} layout="vertical" onFinish={handCrearLista}>
-                <Form.Item
-                  label="Nombre de la lista"
-                  name="nombre"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Por favor ingrese un título",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-              </Form>
-            </ConfigProvider>
-          </Modal>
-          <Flex className="flex-listas" justify="center" align="center" wrap>
+            <LeftOutlined
+              className="return-icon"
+              size={{
+                xs: 24,
+                sm: 32,
+                md: 30,
+                lg: 34,
+                xl: 40,
+                xxl: 40,
+              }}
+            />
+            <h1>{nombreProyecto}</h1>
+            <Avatar
+              className="perfil-icon"
+              size={{
+                xs: 24,
+                sm: 32,
+                md: 30,
+                lg: 34,
+                xl: 40,
+                xxl: 40,
+              }}
+              icon={<UserOutlined />}
+            />
+          </Flex>
+        </Header>
+        <ConfigProvider theme={boardProyecto}>
+          <Content className="content-board">
+            <Flex className="flex-board" justify="flex-end" align="center">
+              <Button
+                onClick={() => setOpen(true)}
+                className="crear-lista"
+                type="primary"
+              >
+                Crear lista
+              </Button>
+            </Flex>
+            <Modal
+              title="Crear lista"
+              open={open}
+              onOk={handCrearLista}
+              confirmLoading={confirmLoading}
+              onCancel={handleCancel}
+            >
+              <ConfigProvider theme={modalCrearProyecto}>
+                <Form form={form} layout="vertical" onFinish={handCrearLista}>
+                  <Form.Item
+                    label="Nombre de la lista"
+                    name="nombre"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Por favor ingrese un título",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Form>
+              </ConfigProvider>
+            </Modal>
+            <Flex
+              className="flex-listas"
+              justify="center"
+              align="center"
+              gap="large"
+            >
               {listas.length > 0 ? (
                 listas.map((lista) => (
                   <CardLista
@@ -176,12 +194,13 @@ const ProjectBoard = () => {
                   />
                 ))
               ) : (
-                  <h1>Aún no hay listas en este proyecto</h1>
+                <h1>Aún no hay listas en este proyecto</h1>
               )}
-          </Flex>
-        </Content>
-      </ConfigProvider>
-    </Layout>
+            </Flex>
+          </Content>
+        </ConfigProvider>
+      </Layout>
+    </DndProvider>
   );
 };
 
