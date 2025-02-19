@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kevin.fastboard.controller.dto.NuevaListaRequest;
 import com.kevin.fastboard.controller.dto.TareaRequest;
 import com.kevin.fastboard.entity.TareaEntity;
 import com.kevin.fastboard.service.tareas.ITareasService;
@@ -53,8 +54,8 @@ public class TareasController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TareaEntity> updateTarea(@RequestHeader("Authorization") String token, @PathVariable Integer id, @RequestBody Integer listaId) throws Exception {
-        TareaEntity tarea = tareasService.updateTarea(id, listaId);
+    public ResponseEntity<TareaEntity> updateTarea(@RequestHeader("Authorization") String token, @PathVariable Integer id, @RequestBody NuevaListaRequest listaId) throws Exception {
+        TareaEntity tarea = tareasService.updateTarea(id, listaId.getListaid());
         if (tarea == null) {
             return ResponseEntity.notFound().build();
         } else {
