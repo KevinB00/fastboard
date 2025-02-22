@@ -19,11 +19,10 @@ import {
 } from "@ant-design/icons";
 import PropTypes from "prop-types";
 import modalCrearProyecto from "../../styles/modalCrearProyecto";
-import { itemTypes } from "../../context/Constants/itemTypes";
-import { useDrag } from "react-dnd";
 import "./TareaComponent.sass";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useDraggable } from "@dnd-kit/core";
 import TextArea from "antd/es/input/TextArea";
 
 const TareaComponent = ({
@@ -54,13 +53,19 @@ const TareaComponent = ({
   const [steps, setSteps] = useState([]);
   const [comentarios, setComentarios] = useState([]);
 
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: itemTypes.TAREA,
-    item: { id, listaid },
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: id,
+  });
+
+  const style = {
+    ...(transform && {
+      transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
     }),
-  }));
+    zIndex: 100,
+    position: "relative",
+    backgroundColor: "white",
+    borderRadius: "5px",
+  };
   useEffect(() => {
     const fetchSteps = async () => {
       try {
@@ -197,8 +202,15 @@ const TareaComponent = ({
     }
   };
   return (
-    <List ref={drag} style={{opacity: isDragging ? 0.5 : 1}} itemLayout="vertical">
-      <List.Item className="tarea" key={id}>
+    <List itemLayout="vertical">
+      <List.Item
+        ref={setNodeRef}
+        style={style}
+        {...listeners}
+        {...attributes}
+        className="tarea"
+        key={id}
+      >
         <List.Item.Meta
           className="meta-tarea"
           title={nombre}

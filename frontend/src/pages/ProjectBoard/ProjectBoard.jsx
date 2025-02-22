@@ -1,5 +1,5 @@
 import { Content, Header } from "antd/es/layout/layout";
-import { LeftOutlined, UserOutlined } from "@ant-design/icons";
+import { LeftOutlined, ReloadOutlined, UserOutlined } from "@ant-design/icons";
 import "./ProjectBoard.sass";
 import {
   Avatar,
@@ -13,14 +13,12 @@ import {
   Modal,
 } from "antd";
 import { useState, useEffect } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import axios from "axios";
 import { useParams } from "react-router";
+import { DndContext, useSensor, useSensors, MouseSensor, TouchSensor } from "@dnd-kit/core";
 import boardProyecto from "../../styles/boardProyecto";
 import modalCrearProyecto from "../../styles/modalCrearProyecto";
 import CardLista from "../../components/CardLista/CardLista";
-
 const ProjectBoard = () => {
   const [nombreProyecto, setNombreProyecto] = useState("");
   const [open, setOpen] = useState(false);
@@ -28,7 +26,33 @@ const ProjectBoard = () => {
   const [listas, setListas] = useState([]);
   const { id } = useParams();
   const [form] = Form.useForm();
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      delay: 2000,
+      tolerance: 5,
+    },
+  });
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 2000,
+      tolerance: 5,
+    },
+  });
+  const sensors = useSensors(mouseSensor, touchSensor);
+  
 
+  const fetchListas = async () => {
+    try {
+      const response = await axios.get(`/api/projects/listas/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setListas(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     const fetchDatosProyecto = async () => {
       try {
@@ -38,19 +62,6 @@ const ProjectBoard = () => {
           },
         });
         setNombreProyecto(response.data.titulo);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const fetchListas = async () => {
-      try {
-        const response = await axios.get(`/api/projects/listas/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        setListas(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -108,8 +119,33 @@ const ProjectBoard = () => {
     setOpen(false);
     form.resetFields();
   };
+
+  const handleDragEnd = async (event) => {
+    const { active, over } = event;
+    console.log(active.id, over.id);
+    if (active.id !== over.id) {
+      try {
+        await axios.put(
+          `/api/tareas/${active.id}`,
+          {
+            listaid: over.id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            }
+          }
+        );
+        setListas([]);
+        fetchListas();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
       <Layout className="layout-board">
         <Header className="header">
           <Flex
@@ -192,15 +228,14 @@ const ProjectBoard = () => {
                     id={lista.id}
                     nombre={lista.nombre}
                   />
-                ))
-              ) : (
-                <h1>Aún no hay listas en este proyecto</h1>
+                ))): (
+                  <></>
               )}
             </Flex>
           </Content>
         </ConfigProvider>
       </Layout>
-    </DndProvider>
+    </DndContext>
   );
 };
 

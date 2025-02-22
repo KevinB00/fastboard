@@ -14,9 +14,8 @@ import "./CardLista.sass";
 import axios from "axios";
 import modalCrearProyecto from "../../styles/modalCrearProyecto";
 import { useState, useEffect } from "react";
-import { itemTypes } from "../../context/Constants/itemTypes";
-import { useDrop } from "react-dnd";
 import TareaComponent from "../Tarea/TareaComponent";
+import { useDroppable } from "@dnd-kit/core";
 
 const CardLista = ({ id, nombre }) => {
   CardLista.propTypes = {
@@ -29,18 +28,10 @@ const CardLista = ({ id, nombre }) => {
   const [tags, setTags] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [form] = Form.useForm();
+  const { isOver, setNodeRef } = useDroppable({
+    id: id,
+  });
 
-
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: itemTypes.TAREA,
-    drop: (item, monitor) => {
-      handleDrop(item);
-    },
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver(),
-    }),
-  }));
-  
   useEffect(() => {
     const fetchTareas = async () => {
       try {
@@ -55,7 +46,7 @@ const CardLista = ({ id, nombre }) => {
       }
     };
     fetchTareas();
-  }, [open]);
+  }, [open, isOver]);
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -68,26 +59,6 @@ const CardLista = ({ id, nombre }) => {
       message.warning("No puedes agregar más de 5 etiquetas");
     }
   };
-
-  const handleDrop = async (item) => {
-    try {
-      const response = await axios.put(
-        `/api/tareas/${item.id}`,
-        {
-          listaid: id,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      setListaTareas((prevState) => [...prevState, item]);
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   const handleRemoveTag = async (tag) => {
     setTags(tags.filter((t) => t !== tag));
@@ -117,7 +88,6 @@ const CardLista = ({ id, nombre }) => {
       message.success("Tarea creada exitosamente");
       setOpen(false);
       form.resetFields();
-      
     } catch (error) {
       message.warning("Por favor complete todos los campos obligatorios");
       console.log(error);
@@ -127,7 +97,7 @@ const CardLista = ({ id, nombre }) => {
 
   return (
     <Card
-    ref={drop}
+      ref={setNodeRef}
       className="card-lista"
       title={nombre}
       extra={
@@ -232,22 +202,22 @@ const CardLista = ({ id, nombre }) => {
           </Form>
         </ConfigProvider>
       </Modal>
-
-      { listaTareas.length > 0 ? (
-        listaTareas.map((tarea) => (
-          <TareaComponent
-            key={tarea.id}
-            id={tarea.id}
-            descripcion={tarea.descripcion}
-            etiquetas={tarea.etiquetas}
-            fecha_fin={tarea.fecha_fin}
-            fecha_inicio={tarea.fecha_inicio}
-            listaid={tarea.listaid}
-            nombre={tarea.nombre} />
-        ))
-      ) : (
-        <p>No hay tareas en esta lista</p>
-      )}
+        {listaTareas.length > 0 ? (
+          listaTareas.map((tarea) => (
+            <TareaComponent
+              key={tarea.id}
+              id={tarea.id}
+              descripcion={tarea.descripcion}
+              etiquetas={tarea.etiquetas}
+              fecha_fin={tarea.fecha_fin}
+              fecha_inicio={tarea.fecha_inicio}
+              listaid={tarea.listaid}
+              nombre={tarea.nombre}
+            />
+          ))
+        ) : (
+          <p>No hay tareas en esta lista</p>
+        )}
     </Card>
   );
 };
