@@ -39,7 +39,11 @@ public class TareasService implements ITareasService {
     @Override
     public List<TareaEntity> getTareas(Integer id) {
         try{
-            return tareasRepository.findByListaid(id);
+            List<TareaEntity> tareas = tareasRepository.findByListaid(id);
+            //Ordenar por fecha de inicio
+            tareas.sort((t1, t2) -> t1.getFecha_fin().compareTo(t2.getFecha_fin()));
+            return tareas;
+
         }catch(Exception e){
             return null;
         }
