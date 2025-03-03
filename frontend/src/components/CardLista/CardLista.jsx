@@ -95,6 +95,10 @@ const CardLista = ({ id, nombre }) => {
     }
   };
 
+  const handleDeleteTarea = (tareaId) => {
+    setListaTareas((prevTareas) => prevTareas.filter((tarea) => tarea.id !== tareaId));
+  };
+
   return (
     <Card
       ref={setNodeRef}
@@ -213,6 +217,7 @@ const CardLista = ({ id, nombre }) => {
               fecha_inicio={tarea.fecha_inicio}
               listaid={tarea.listaid}
               nombre={tarea.nombre}
+              onDelete={handleDeleteTarea}
             />
           ))
         ) : (

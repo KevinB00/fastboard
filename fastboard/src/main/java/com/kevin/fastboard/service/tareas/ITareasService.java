@@ -13,4 +13,6 @@ public interface ITareasService {
 
     TareaEntity updateTarea(Integer id, Integer listaId);
 
+    boolean deleteTarea(Integer id);
+
 }

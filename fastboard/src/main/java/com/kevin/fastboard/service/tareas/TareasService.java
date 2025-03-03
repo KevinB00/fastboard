@@ -60,4 +60,14 @@ public class TareasService implements ITareasService {
         }
     }
 
+    @Override
+    public boolean deleteTarea(Integer id) {
+        try{
+            tareasRepository.deleteById(id);
+            return true;
+        }catch(Exception e){
+            return false;
+        }
+    }
+
 }

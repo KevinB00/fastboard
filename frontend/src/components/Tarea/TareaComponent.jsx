@@ -33,6 +33,7 @@ const TareaComponent = ({
   fecha_inicio,
   listaid,
   nombre,
+  onDelete,
 }) => {
   TareaComponent.propTypes = {
     id: PropTypes.number,
@@ -42,6 +43,7 @@ const TareaComponent = ({
     fecha_inicio: PropTypes.string,
     listaid: PropTypes.number,
     nombre: PropTypes.string,
+    onDelete: PropTypes.func.isRequired,
   };
 
   const [open, setOpen] = useState(false);
@@ -201,6 +203,25 @@ const TareaComponent = ({
       console.log(error);
     }
   };
+
+  const eliminarTarea = async () => {
+    try {
+      const response = await axios.delete(`/api/tareas/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (response.status === 200) {
+        message.success("Tarea eliminada exitosamente");
+        onDelete(id); 
+      } else {
+        message.warning("No se pudo eliminar la tarea");
+      }
+    } catch (error) {
+      console.log(error);
+      message.warning("No se pudo eliminar la tarea");
+    }
+  };
   return (
     <List itemLayout="vertical">
       <List.Item
@@ -220,7 +241,7 @@ const TareaComponent = ({
           <Button onClick={() => setOpen(true)} type="primary">
             <EditOutlined />
           </Button>
-          <Button color="danger" variant="outline">
+          <Button onClick={eliminarTarea} color="danger" variant="outline">
             <DeleteOutlined />
           </Button>
         </Flex>
