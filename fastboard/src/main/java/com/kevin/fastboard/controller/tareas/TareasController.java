@@ -54,6 +54,17 @@ public class TareasController {
         }
     }
 
+    @GetMapping("/tareasUsuario")
+    public ResponseEntity<List<TareaEntity>> getTareasUsuario(@RequestHeader("Authorization") String token) throws Exception {
+        String username = jwtUtil.extractUsername(token);
+        List<TareaEntity> tareas = tareasService.getTareasUsuario(username);
+        if (tareas.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(tareas);
+        }
+    } 
+
     @PutMapping("/{id}")
     public ResponseEntity<TareaEntity> updateTarea(@RequestHeader("Authorization") String token, @PathVariable Integer id, @RequestBody NuevaListaRequest listaId) throws Exception {
         TareaEntity tarea = tareasService.updateTarea(id, listaId.getListaid());

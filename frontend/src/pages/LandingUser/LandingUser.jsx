@@ -23,6 +23,7 @@ import {
 } from "@ant-design/icons";
 const { Sider, Header, Content } = Layout;
 import CardProject from "../../components/CardProject/CardProject";
+import CardTarea from "../../components/CardTarea/CardTarea";
 import "./LandingUser.sass";
 import axios from "axios";
 import modalCrearProyecto from "../../styles/modalCrearProyecto";
@@ -31,9 +32,11 @@ import createProject from "../../services/projects/create";
 const LandingUser = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [projects, setProjects] = useState([]);
+  const [keySelected, setKeySelected] = useState("1");
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
+  const [tareas, setTareas] = useState([]);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -49,6 +52,20 @@ const LandingUser = () => {
         console.log(error);
       }
     };
+    const fetchTareas = async () =>{
+      try{
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`/api/tareas/tareasUsuario`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setTareas(response.data);
+      }catch(error){
+        console.log(error);
+    }
+  };
+    fetchTareas();
     fetchProjects();
   }, []);
 
@@ -92,7 +109,8 @@ const LandingUser = () => {
         </div>
         <Menu
           mode="inline"
-          defaultSelectedKeys={["1"]}
+          onClick={(e) => setKeySelected(e.key)}
+          defaultSelectedKeys={keySelected}
           items={[
             {
               key: "1",
@@ -195,21 +213,60 @@ const LandingUser = () => {
               </Modal>
             </ConfigProvider>
           </Flex>
-          <div className="project-list">
-            {projects.length > 0 ? (
-              projects.map((project) => (
-                <CardProject
-                  key={project.id}
-                  id={project.id}
-                  title={project.titulo}
-                  description={project.descripcion}
-                  usuariocreador={project.usuariocreador}
-                />
-              ))
-            ) : (
-              <p>No hay proyectos creados</p>
-            )}
-          </div>
+          {keySelected === "1" ? (
+            <div className="project-list">
+              {projects.length > 0 ? (
+                projects.map((project) => (
+                  <CardProject
+                    key={project.id}
+                    id={project.id}
+                    title={project.titulo}
+                    description={project.descripcion}
+                    usuariocreador={project.usuariocreador}
+                  />
+                ))
+              ) : (
+                <p>No hay proyectos creados</p>
+              )}
+            </div>
+          ) : keySelected === "2" ? (
+            <div className="tareas-list">
+              {tareas.length > 0 ? (
+                tareas.map((tarea) => (
+                  <CardTarea
+                    key={tarea.id}
+                    id={tarea.id}
+                    title={tarea.titulo}
+                    description={tarea.descripcion}
+                    estado={tarea.estado}
+                  />
+                ))
+              ) : (
+                <p>No hay tareas creadas</p>
+  )}
+            </div>
+          ) : keySelected === "3" ? (
+            <p>Mostrar marcados</p>
+          ) : keySelected === "4" ? (
+            <p>Mostrar colaboradores</p>
+          ) : (
+            <div className="project-list">
+              {projects.length > 0 ? (
+                projects.map((project) => (
+                  <CardProject
+                    key={project.id}
+                    id={project.id}
+                    title={project.titulo}
+                    description={project.descripcion}
+                    usuariocreador={project.usuariocreador}
+                  />
+                ))
+              ) : (
+                <p>No hay proyectos creados</p>
+              )}
+            </div>
+          )}
+
         </Content>
       </Layout>
     </Layout>

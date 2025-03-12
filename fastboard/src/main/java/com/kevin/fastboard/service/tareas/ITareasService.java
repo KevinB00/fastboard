@@ -15,4 +15,6 @@ public interface ITareasService {
 
     boolean deleteTarea(Integer id);
 
+    List<TareaEntity> getTareasUsuario(String username);
+
 }

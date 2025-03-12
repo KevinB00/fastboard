@@ -1,5 +1,5 @@
 import { Content, Header } from "antd/es/layout/layout";
-import { LeftOutlined, ReloadOutlined, UserOutlined } from "@ant-design/icons";
+import { LeftOutlined, UserOutlined } from "@ant-design/icons";
 import "./ProjectBoard.sass";
 import {
   Avatar,
@@ -14,7 +14,7 @@ import {
 } from "antd";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { DndContext, useSensor, useSensors, MouseSensor, TouchSensor } from "@dnd-kit/core";
 import boardProyecto from "../../styles/boardProyecto";
 import modalCrearProyecto from "../../styles/modalCrearProyecto";
@@ -26,6 +26,7 @@ const ProjectBoard = () => {
   const [listas, setListas] = useState([]);
   const { id } = useParams();
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
       delay: 2000,
@@ -143,7 +144,6 @@ const ProjectBoard = () => {
       }
     }
   };
-
   return (
     <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
       <Layout className="layout-board">
@@ -164,6 +164,7 @@ const ProjectBoard = () => {
                 xl: 40,
                 xxl: 40,
               }}
+              onClick={() => navigate("/landing-user")}
             />
             <h1>{nombreProyecto}</h1>
             <Avatar
