@@ -52,8 +52,8 @@ const LandingUser = () => {
         console.log(error);
       }
     };
-    const fetchTareas = async () =>{
-      try{
+    const fetchTareas = async () => {
+      try {
         const token = localStorage.getItem("token");
         const response = await axios.get(`/api/tareas/tareasUsuario`, {
           headers: {
@@ -61,10 +61,10 @@ const LandingUser = () => {
           },
         });
         setTareas(response.data);
-      }catch(error){
+      } catch (error) {
         console.log(error);
-    }
-  };
+      }
+    };
     fetchTareas();
     fetchProjects();
   }, []);
@@ -213,43 +213,7 @@ const LandingUser = () => {
               </Modal>
             </ConfigProvider>
           </Flex>
-          {keySelected === "1" ? (
-            <div className="project-list">
-              {projects.length > 0 ? (
-                projects.map((project) => (
-                  <CardProject
-                    key={project.id}
-                    id={project.id}
-                    title={project.titulo}
-                    description={project.descripcion}
-                    usuariocreador={project.usuariocreador}
-                  />
-                ))
-              ) : (
-                <p>No hay proyectos creados</p>
-              )}
-            </div>
-          ) : keySelected === "2" ? (
-            <div className="tareas-list">
-              {tareas.length > 0 ? (
-                tareas.map((tarea) => (
-                  <CardTarea
-                    key={tarea.id}
-                    id={tarea.id}
-                    title={tarea.titulo}
-                    description={tarea.descripcion}
-                    estado={tarea.estado}
-                  />
-                ))
-              ) : (
-                <p>No hay tareas creadas</p>
-  )}
-            </div>
-          ) : keySelected === "3" ? (
-            <p>Mostrar marcados</p>
-          ) : keySelected === "4" ? (
-            <p>Mostrar colaboradores</p>
-          ) : (
+          {keySelected === "1" && (
             <div className="project-list">
               {projects.length > 0 ? (
                 projects.map((project) => (
@@ -266,7 +230,47 @@ const LandingUser = () => {
               )}
             </div>
           )}
-
+          {keySelected === "2" && (
+            <div className="tareas-list">
+              {tareas.length > 0 ? (
+                tareas.map((tarea) => (
+                  //Crear componente CardTarea
+                  <CardTarea
+                    key={tarea.id}
+                    id={tarea.id}
+                    titulo={tarea.nombre}
+                    descripcion={tarea.descripcion}
+                    fechaFin={tarea.fecha_fin}
+                    etiquetas={tarea.etiquetas}
+                  />
+                ))
+              ) : (
+                <p>No hay tareas creadas</p>
+              )}
+            </div>
+          )}
+          {keySelected === "3" && <p>Mostrar marcados</p>}
+          {keySelected === "4" && <p>Mostrar colaboradores</p>}
+          {keySelected !== "1" &&
+            keySelected !== "2" &&
+            keySelected !== "3" &&
+            keySelected !== "4" && (
+              <div className="project-list">
+                {projects.length > 0 ? (
+                  projects.map((project) => (
+                    <CardProject
+                      key={project.id}
+                      id={project.id}
+                      title={project.titulo}
+                      description={project.descripcion}
+                      usuariocreador={project.usuariocreador}
+                    />
+                  ))
+                ) : (
+                  <p>No hay proyectos creados</p>
+                )}
+              </div>
+            )}
         </Content>
       </Layout>
     </Layout>

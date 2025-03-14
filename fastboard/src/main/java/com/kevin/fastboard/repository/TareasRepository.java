@@ -13,11 +13,14 @@ public interface TareasRepository extends CrudRepository<TareaEntity, Integer> {
 
     List<TareaEntity> findByListaid(Integer id);
 
-    @Query(value = "SELECT *" 
-     + "FROM tareas t, listas l, proyectos p "
-     + "WHERE t.listaid = l.id "
+    @Query(value = "SELECT t.* " 
+     + "FROM tareas t "
+     + "INNER JOIN listas l ON t.listaid = l.id "
+     + "INNER JOIN proyecto p ON l.proyectoid = p.id "
+     + "WHERE p.usuariocreador = ?1", nativeQuery = true)
+/*      + "WHERE t.listaid = l.id "
      + "AND l.proyectoid = p.id "
-     + "AND p.usuariocreador = ?1", nativeQuery = true)
+     + "AND p.usuariocreador = ?1", nativeQuery = true)*/
     List<TareaEntity> findByUser(Integer userId);
 
     @Query(value = "SELECT id "
