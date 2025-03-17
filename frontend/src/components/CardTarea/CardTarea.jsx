@@ -1,4 +1,6 @@
 import PropTypes from "prop-types";
+import { Card, Tag } from "antd";
+import { useNavigate } from "react-router";
 import "./CardTarea.sass";
 
 export const CardTarea = ({id, titulo, descripcion, fechaFin, etiquetas}) => {
@@ -10,17 +12,24 @@ CardTarea.propTypes = {
     etiquetas: PropTypes.array
 }
 
+const navigate = useNavigate();
+const handOpenTarea = () => {
+
+    navigate(`/project/`)
+}
 return (
-    <div className="card-tarea">
-        <h3>{titulo}</h3>
-        <p>{descripcion}</p>
+    <Card onClick={handOpenTarea} className="card-tarea">
+        <Card.Meta
+            title={titulo}
+            description={descripcion}
+        />
         <p>{fechaFin}</p>
         <div className="etiquetas">
-            {etiquetas.map((etiqueta) => (
-                <p key={etiqueta.id}>{etiqueta.nombre}</p>
+            {etiquetas.map(element => (
+                <Tag key={element}>{element}</Tag>
             ))}
         </div>
-    </div>
+    </Card>
 )
 
 

@@ -11,6 +11,8 @@ import {
   DatePicker,
   ConfigProvider,
   message,
+  Col,
+  Row,
 } from "antd";
 import {
   ProjectOutlined,
@@ -173,88 +175,54 @@ const LandingUser = () => {
             color: "#000",
           }}
         >
-          <Flex align="center" justify="flex-end" wrap>
-            <Button type="primary" onClick={showFormulario}>
-              Crear proyecto
-            </Button>
-            <ConfigProvider theme={modalCrearProyecto}>
-              <Modal
-                title="Crear proyecto"
-                open={open}
-                onOk={handCrearProyecto}
-                confirmLoading={confirmLoading}
-                onCancel={handleCancel}
-                okButtonProps={{ form: "form_crear_proyecto", key: "submit" }}
-              >
-                <Form
-                  form={form}
-                  id="form_crear_proyecto"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 14 }}
-                  layout="horizontal"
-                  name="form_crear_proyecto"
-                >
-                  <Form.Item
-                    label="Título"
-                    name="title"
-                    rules={[
-                      { required: true, message: "El título es obligatorio" },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item label="Descripción" name="description">
-                    <Input />
-                  </Form.Item>
-                  <Form.Item label="FechaFin" name="fechaFin">
-                    <DatePicker format={"YYYY-MM-DD"} />
-                  </Form.Item>
-                </Form>
-              </Modal>
-            </ConfigProvider>
-          </Flex>
           {keySelected === "1" && (
-            <div className="project-list">
-              {projects.length > 0 ? (
-                projects.map((project) => (
-                  <CardProject
-                    key={project.id}
-                    id={project.id}
-                    title={project.titulo}
-                    description={project.descripcion}
-                    usuariocreador={project.usuariocreador}
-                  />
-                ))
-              ) : (
-                <p>No hay proyectos creados</p>
-              )}
-            </div>
-          )}
-          {keySelected === "2" && (
-            <div className="tareas-list">
-              {tareas.length > 0 ? (
-                tareas.map((tarea) => (
-                  //Crear componente CardTarea
-                  <CardTarea
-                    key={tarea.id}
-                    id={tarea.id}
-                    titulo={tarea.nombre}
-                    descripcion={tarea.descripcion}
-                    fechaFin={tarea.fecha_fin}
-                    etiquetas={tarea.etiquetas}
-                  />
-                ))
-              ) : (
-                <p>No hay tareas creadas</p>
-              )}
-            </div>
-          )}
-          {keySelected === "3" && <p>Mostrar marcados</p>}
-          {keySelected === "4" && <p>Mostrar colaboradores</p>}
-          {keySelected !== "1" &&
-            keySelected !== "2" &&
-            keySelected !== "3" &&
-            keySelected !== "4" && (
+            <>
+              <Flex align="center" justify="flex-end" wrap>
+                <Button type="primary" onClick={showFormulario}>
+                  Crear proyecto
+                </Button>
+                <ConfigProvider theme={modalCrearProyecto}>
+                  <Modal
+                    title="Crear proyecto"
+                    open={open}
+                    onOk={handCrearProyecto}
+                    confirmLoading={confirmLoading}
+                    onCancel={handleCancel}
+                    okButtonProps={{
+                      form: "form_crear_proyecto",
+                      key: "submit",
+                    }}
+                  >
+                    <Form
+                      form={form}
+                      id="form_crear_proyecto"
+                      labelCol={{ span: 6 }}
+                      wrapperCol={{ span: 14 }}
+                      layout="horizontal"
+                      name="form_crear_proyecto"
+                    >
+                      <Form.Item
+                        label="Título"
+                        name="title"
+                        rules={[
+                          {
+                            required: true,
+                            message: "El título es obligatorio",
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item label="Descripción" name="description">
+                        <Input />
+                      </Form.Item>
+                      <Form.Item label="FechaFin" name="fechaFin">
+                        <DatePicker format={"YYYY-MM-DD"} />
+                      </Form.Item>
+                    </Form>
+                  </Modal>
+                </ConfigProvider>
+              </Flex>
               <div className="project-list">
                 {projects.length > 0 ? (
                   projects.map((project) => (
@@ -270,6 +238,98 @@ const LandingUser = () => {
                   <p>No hay proyectos creados</p>
                 )}
               </div>
+            </>
+          )}
+          {keySelected === "2" && (
+            <div className="tareas-list">
+              {tareas.length > 0 ? (
+                <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+                  {tareas.map((tarea) => (
+                    <Col className="tarea" key={tarea.id} span={8}>
+                      <CardTarea
+                        id={tarea.id}
+                        titulo={tarea.nombre}
+                        descripcion={tarea.descripcion}
+                        fechaFin={tarea.fecha_fin}
+                        etiquetas={tarea.etiquetas}
+                      />
+                    </Col>
+                  ))}
+                </Row>
+              ) : (
+                <p>No hay tareas creadas</p>
+              )}
+            </div>
+          )}
+          {keySelected === "3" && <p>Mostrar marcados</p>}
+          {keySelected === "4" && <p>Mostrar colaboradores</p>}
+          {keySelected !== "1" &&
+            keySelected !== "2" &&
+            keySelected !== "3" &&
+            keySelected !== "4" && (
+              <>
+                <Flex align="center" justify="flex-end" wrap>
+                  <Button type="primary" onClick={showFormulario}>
+                    Crear proyecto
+                  </Button>
+                  <ConfigProvider theme={modalCrearProyecto}>
+                    <Modal
+                      title="Crear proyecto"
+                      open={open}
+                      onOk={handCrearProyecto}
+                      confirmLoading={confirmLoading}
+                      onCancel={handleCancel}
+                      okButtonProps={{
+                        form: "form_crear_proyecto",
+                        key: "submit",
+                      }}
+                    >
+                      <Form
+                        form={form}
+                        id="form_crear_proyecto"
+                        labelCol={{ span: 6 }}
+                        wrapperCol={{ span: 14 }}
+                        layout="horizontal"
+                        name="form_crear_proyecto"
+                      >
+                        <Form.Item
+                          label="Título"
+                          name="title"
+                          rules={[
+                            {
+                              required: true,
+                              message: "El título es obligatorio",
+                            },
+                          ]}
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item label="Descripción" name="description">
+                          <Input />
+                        </Form.Item>
+                        <Form.Item label="FechaFin" name="fechaFin">
+                          <DatePicker format={"YYYY-MM-DD"} />
+                        </Form.Item>
+                      </Form>
+                    </Modal>
+                  </ConfigProvider>
+                </Flex>
+                <div className="project-list">
+                  {projects.length > 0 ? (
+                    projects.map((project) => (
+                      <CardProject
+                        key={project.id}
+                        id={project.id}
+                        title={project.titulo}
+                        description={project.descripcion}
+                        usuariocreador={project.usuariocreador}
+                      />
+                    ))
+                  ) : (
+                    <p>No hay proyectos creados</p>
+                  )}
+                </div>
+              </>
             )}
         </Content>
       </Layout>
