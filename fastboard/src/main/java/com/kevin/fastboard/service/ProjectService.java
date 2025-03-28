@@ -81,4 +81,19 @@ public class ProjectService implements IProjectService {
         }
     }
 
+    @Override
+    public ProjectEntity marcarProyecto(Integer id) {
+        try{
+        ProjectEntity project = projectRepository.findById(id).orElse(null);
+        if (project != null) {
+            project.setMarcado(!project.isMarcado());
+            return projectRepository.save(project);
+        } else {
+            return null;
+        }
+        }catch(Exception e){
+            return null;
+        }
+    }
+
 }

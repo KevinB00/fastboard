@@ -17,7 +17,6 @@ import {
   DeleteOutlined,
   StarOutlined,
   StarFilled,
-  ContactsFilled,
 } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import axios from "axios";

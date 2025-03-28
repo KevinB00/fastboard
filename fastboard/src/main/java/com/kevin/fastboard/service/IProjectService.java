@@ -18,4 +18,6 @@ public interface IProjectService {
 
     List<ListasEntity> getListas(Integer id);
 
+    ProjectEntity marcarProyecto(Integer id);
+
 }

@@ -232,6 +232,7 @@ const LandingUser = () => {
                       title={project.titulo}
                       description={project.descripcion}
                       usuariocreador={project.usuariocreador}
+                      marcado={project.marcado}
                     />
                   ))
                 ) : (
@@ -262,7 +263,51 @@ const LandingUser = () => {
               )}
             </div>
           )}
-          {keySelected === "3" && <p>Mostrar marcados</p>}
+          {keySelected === "3" && (
+            <div className="marcados-list">
+              <Flex className="flex-proyectos-marcados" align="center" gap="large">
+                {projects.length > 0 ? (
+                  projects.map((project) => {
+                    if (project.marcado) {
+                      return (
+                        <CardProject
+                          key={project.id}
+                          id={project.id}
+                          title={project.titulo}
+                          description={project.descripcion}
+                          usuariocreador={project.usuariocreador}
+                          marcado={project.marcado}
+                        />
+                      );
+                    }
+                  })
+                ) : (
+                  <p>No hay proyectos marcados</p>
+                )}
+              </Flex>
+              <Flex className="flex-tareas-marcadas" align="center" gap="large">
+                {tareas.length > 0 ? (
+                  tareas.map((tarea) => {
+                    if (tarea.marcado) {
+                      return (
+                        <CardTarea
+                          key={tarea.id}
+                          id={tarea.id}
+                          titulo={tarea.nombre}
+                          descripcion={tarea.descripcion}
+                          fechaFin={tarea.fecha_fin}
+                          etiquetas={tarea.etiquetas}
+                          marcado={tarea.marcado}
+                        />
+                      );
+                    }
+                  }
+                )) : (
+                  <p>No hay tareas marcadas</p>
+                )}
+              </Flex>
+            </div>
+          )}
           {keySelected === "4" && <p>Mostrar colaboradores</p>}
           {keySelected !== "1" &&
             keySelected !== "2" &&
@@ -324,6 +369,7 @@ const LandingUser = () => {
                         title={project.titulo}
                         description={project.descripcion}
                         usuariocreador={project.usuariocreador}
+                        marcado={project.marcado}
                       />
                     ))
                   ) : (
