@@ -83,4 +83,15 @@ public class TareasService implements ITareasService {
         }
     }
 
+    @Override
+    public TareaEntity marcarTarea(Integer id) {
+        try{
+            TareaEntity tarea = tareasRepository.findById(id).get();
+            tarea.setMarcado(!tarea.isMarcado());
+            return tareasRepository.save(tarea);
+        }catch(Exception e){
+            return null;
+        }
+    }
+
 }

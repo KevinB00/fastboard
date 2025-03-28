@@ -43,4 +43,7 @@ public class TareaEntity {
 
     @Column
     private Integer listaid;
+    
+    @Column(nullable = true)
+    private boolean marcado;
 }

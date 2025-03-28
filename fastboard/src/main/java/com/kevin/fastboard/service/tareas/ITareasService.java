@@ -17,4 +17,6 @@ public interface ITareasService {
 
     List<TareaEntity> getTareasUsuario(String username);
 
+    TareaEntity marcarTarea(Integer id);
+
 }

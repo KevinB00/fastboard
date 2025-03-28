@@ -12,13 +12,26 @@ import {
   Input,
   message,
 } from "antd";
-import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  PlusCircleOutlined,
+  DeleteOutlined,
+  StarOutlined,
+  StarFilled,
+  ContactsFilled,
+} from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import modalCrearProyecto from "../../styles/modalCrearProyecto";
 import "./CardTarea.sass";
 
-export const CardTarea = ({ id, titulo, descripcion, fechaFin, etiquetas }) => {
+export const CardTarea = ({
+  id,
+  titulo,
+  descripcion,
+  fechaFin,
+  etiquetas,
+  marcado,
+}) => {
   CardTarea.propTypes = {
     id: PropTypes.number,
     titulo: PropTypes.string,
@@ -53,6 +66,7 @@ export const CardTarea = ({ id, titulo, descripcion, fechaFin, etiquetas }) => {
   const [steps, setSteps] = useState([]);
   const [current, setCurrent] = useState(0);
   const [newStep] = Form.useForm();
+  const [estadoMarcar, setMarcado] = useState(marcado);
 
   const estadoTarea = async (current) => {
     setCurrent(current);
@@ -127,15 +141,48 @@ export const CardTarea = ({ id, titulo, descripcion, fechaFin, etiquetas }) => {
       message.warning("Por favor complete todos los campos obligatorios");
     }
   };
+
+  const marcar = async () => {
+    try {
+      const response = await axios.put(
+        `/api/tareas/marcar/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setMarcado(response.data);
+    } catch (error) {
+      console.log(error);
+      message.warning("No se a podido marcar la tarea");
+    }
+  };
   return (
-    <Card onClick={() => setOpen(true)} className="card-tarea">
-      <Card.Meta title={titulo} description={descripcion} />
+    <Card
+      className="card-tarea"
+      actions={[
+        <Button
+          key={id}
+          id="tareaMarcada"
+          onClick={marcar}
+          icon={estadoMarcar ? <StarFilled /> : <StarOutlined />}
+        />,
+      ]}
+    >
+      <Card.Meta
+        title={titulo}
+        description={descripcion}
+        onClick={() => setOpen(true)}
+      />
       <p>{fechaFin}</p>
       <div className="etiquetas">
         {etiquetas.map((element) => (
           <Tag key={element}>{element}</Tag>
         ))}
       </div>
+
       <Modal
         title={titulo}
         open={open}

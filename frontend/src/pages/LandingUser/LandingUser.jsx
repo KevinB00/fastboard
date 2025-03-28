@@ -69,7 +69,7 @@ const LandingUser = () => {
     };
     fetchTareas();
     fetchProjects();
-  }, []);
+  }, [keySelected]);
 
   const showFormulario = () => {
     setOpen(true);
@@ -252,6 +252,7 @@ const LandingUser = () => {
                         descripcion={tarea.descripcion}
                         fechaFin={tarea.fecha_fin}
                         etiquetas={tarea.etiquetas}
+                        marcado={tarea.marcado}
                       />
                     </Col>
                   ))}

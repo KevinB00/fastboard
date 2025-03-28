@@ -75,6 +75,16 @@ public class TareasController {
         }
     }
 
+    @PutMapping("/marcar/{id}")
+    public ResponseEntity<Boolean> marcarTarea(@RequestHeader("Authorization") String token, @PathVariable Integer id) throws Exception {
+        TareaEntity tarea = tareasService.marcarTarea(id);
+        if (tarea == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(tarea.isMarcado());
+        }
+    }
+
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Void> deleteTarea(@RequestHeader("Authorization") String token, @PathVariable Integer id) throws Exception {
         if (tareasService.deleteTarea(id)) {

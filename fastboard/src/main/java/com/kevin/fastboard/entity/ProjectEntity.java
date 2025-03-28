@@ -42,4 +42,7 @@ public class ProjectEntity {
 
     @Column
     private LocalDate fecha_fin;
+
+    @Column(nullable = true)
+    private boolean marcado;
 }
