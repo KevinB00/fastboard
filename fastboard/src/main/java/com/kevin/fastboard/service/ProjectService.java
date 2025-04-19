@@ -96,4 +96,19 @@ public class ProjectService implements IProjectService {
         }
     }
 
+    @Override
+    public boolean deleteProject(Integer id) {
+        try{
+        ProjectEntity project = projectRepository.findById(id).orElse(null);
+        if (project != null) {
+            projectRepository.delete(project);
+            return true;
+        } else {
+            return false;
+        }
+        }catch(Exception e){
+            return false;
+        }
+    }
+
 }

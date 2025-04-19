@@ -20,4 +20,6 @@ public interface IProjectService {
 
     ProjectEntity marcarProyecto(Integer id);
 
+    boolean deleteProject(Integer id);
+
 }

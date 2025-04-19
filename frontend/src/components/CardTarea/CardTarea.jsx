@@ -158,117 +158,135 @@ export const CardTarea = ({
       message.warning("No se a podido marcar la tarea");
     }
   };
+
+  const eliminarTarea = async () => {};
   return (
-    <Card
-      className="card-tarea"
-      actions={[
-        <Button
-          key={id}
-          id="tareaMarcada"
-          onClick={marcar}
-          icon={estadoMarcar ? <StarFilled /> : <StarOutlined />}
-        />,
-      ]}
+    <ConfigProvider
+      theme={{
+        components: {
+          Button: {
+            defaultHoverColor: "#ff0000",
+          },
+        },
+      }}
     >
-      <Card.Meta
-        title={titulo}
-        description={descripcion}
-        onClick={() => setOpen(true)}
-      />
-      <p>{fechaFin}</p>
-      <div className="etiquetas">
-        {etiquetas.map((element) => (
-          <Tag key={element}>{element}</Tag>
-        ))}
-      </div>
-
-      <Modal
-        title={titulo}
-        open={open}
-        onCancel={handUpdateTarea}
-        footer={null}
+      <Card
+        className="card-tarea"
+        actions={[
+          <Button
+            key={id}
+            id="tareaMarcada"
+            onClick={marcar}
+            icon={estadoMarcar ? <StarFilled /> : <StarOutlined />}
+          />,
+          <Button
+            key="eliminar"
+            id="eliminar"
+            onClick={eliminarTarea}
+            icon={<DeleteOutlined />}
+          />,
+        ]}
       >
-        <Flex
-          className="flex-modal-tarea"
-          justify="space-around"
-          align="center"
-          gap="large"
-          vertical
-        >
-          <h3>Steps</h3>
-          <Flex justify="space-between" gap="large">
-            <Steps
-              progressDot
-              current={current}
-              onChange={estadoTarea}
-              items={steps.map((step) => ({
-                key: step.id,
-                title: step.nombre,
-                description: step.fecha_prevista,
-              }))}
-              direction="vertical"
-              size="small"
-            />
-            <Button
-              onClick={() => setOpenStep(true)}
-              type="primary"
-              shape="circle"
-            >
-              <PlusCircleOutlined />
-            </Button>
-            <Button
-              color="danger"
-              variant="outline"
-              shape="circle"
-              onClick={eliminarPasoActual}
-            >
-              <DeleteOutlined />
-            </Button>
-          </Flex>
-          <Flex justify="space-between" gap="large">
-            <div className="descripcion">
-              <h3>Descripción</h3>
-              <p>{descripcion}</p>
-            </div>
-            <div className="etiquetas">
-              <h3>Etiquetas</h3>
-              {etiquetas.map((etiqueta) => (
-                <Tag>{etiqueta}</Tag>
-              ))}
-            </div>
-          </Flex>
-        </Flex>
-        <Modal
-          open={openStep}
-          onOk={handNewStep}
-          onCancel={() => {
-            setOpenStep(false);
-            newStep.resetFields();
-          }}
-          title="Añadir paso"
-        >
-          <ConfigProvider theme={modalCrearProyecto}>
-            <Form form={newStep} layout="vertical">
-              <Form.Item
-                label="Nombre"
-                name="nombre"
-                rules={[{ required: true }]}
-              >
-                <Input />
-              </Form.Item>
+        <Card.Meta
+          title={titulo}
+          description={descripcion}
+          onClick={() => setOpen(true)}
+        />
+        <p>{fechaFin}</p>
+        <div className="etiquetas">
+          {etiquetas.map((element) => (
+            <Tag key={element}>{element}</Tag>
+          ))}
+        </div>
 
-              <Form.Item
-                label="Fecha prevista"
-                name="fecha_prevista"
-                rules={[{ required: true }]}
+        <Modal
+          title={titulo}
+          open={open}
+          onCancel={handUpdateTarea}
+          footer={null}
+        >
+          <Flex
+            className="flex-modal-tarea"
+            justify="space-around"
+            align="center"
+            gap="large"
+            vertical
+          >
+            <h3>Steps</h3>
+            <Flex justify="space-between" gap="large">
+              <Steps
+                progressDot
+                current={current}
+                onChange={estadoTarea}
+                items={steps.map((step) => ({
+                  key: step.id,
+                  title: step.nombre,
+                  description: step.fecha_prevista,
+                }))}
+                direction="vertical"
+                size="small"
+              />
+              <Button
+                onClick={() => setOpenStep(true)}
+                type="primary"
+                shape="circle"
               >
-                <DatePicker format={"YYYY-MM-DD"} />
-              </Form.Item>
-            </Form>
-          </ConfigProvider>
+                <PlusCircleOutlined />
+              </Button>
+              <Button
+                color="danger"
+                variant="outline"
+                shape="circle"
+                onClick={eliminarPasoActual}
+              >
+                <DeleteOutlined />
+              </Button>
+            </Flex>
+            <Flex justify="space-between" gap="large">
+              <div className="descripcion">
+                <h3>Descripción</h3>
+                <p>{descripcion}</p>
+              </div>
+              <div className="etiquetas">
+                <h3>Etiquetas</h3>
+                {etiquetas.map((etiqueta) => (
+                  <Tag>{etiqueta}</Tag>
+                ))}
+              </div>
+            </Flex>
+          </Flex>
+          <Modal
+            open={openStep}
+            onOk={handNewStep}
+            onCancel={() => {
+              setOpenStep(false);
+              newStep.resetFields();
+            }}
+            title="Añadir paso"
+          >
+            <ConfigProvider theme={modalCrearProyecto}>
+              <Form form={newStep} layout="vertical">
+                <Form.Item
+                  label="Nombre"
+                  name="nombre"
+                  rules={[{ required: true }]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  label="Fecha prevista"
+                  name="fecha_prevista"
+                  rules={[{ required: true }]}
+                >
+                  <DatePicker format={"YYYY-MM-DD"} />
+                </Form.Item>
+              </Form>
+            </ConfigProvider>
+          </Modal>
         </Modal>
-      </Modal>
-    </Card>
+      </Card>
+    </ConfigProvider>
   );
 };
 export default CardTarea;
